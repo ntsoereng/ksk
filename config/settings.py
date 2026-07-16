@@ -17,22 +17,45 @@ from decouple import config, Csv
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 
+def env_bool(value):
+    return str(value).lower() in {'1', 'true', 'yes', 'on', 'debug'}
+
+
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/6.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = config("SECRET_KEY")
 
+
 # SECURITY WARNING: don't run with debug turned on in production!
 # Accept deployment labels such as "release" as production (DEBUG=False), while
 # still supporting the familiar true/false environment variable values.
-DEBUG = config("DEBUG", default=False, cast=lambda value: str(value).lower() in {'1', 'true', 'yes', 'on', 'debug'})
+DEBUG = config("DEBUG", default=False, cast=env_bool)
+
+# SECURE_SSL_REDIRECT = not DEBUG
 
 ALLOWED_HOSTS = config(
     "ALLOWED_HOSTS",
     default="127.0.0.1,localhost",
     cast=Csv(),
 )
+
+# These defaults protect production deployments while allowing local HTTP testing
+# by setting the relevant variables to false in a development .env file.
+SECURE_SSL_REDIRECT = config(
+    'SECURE_SSL_REDIRECT', default=not DEBUG, cast=env_bool)
+SESSION_COOKIE_SECURE = config(
+    'SESSION_COOKIE_SECURE', default=not DEBUG, cast=env_bool)
+CSRF_COOKIE_SECURE = config(
+    'CSRF_COOKIE_SECURE', default=not DEBUG, cast=env_bool)
+SECURE_HSTS_SECONDS = config(
+    'SECURE_HSTS_SECONDS', default=31536000 if not DEBUG else 0, cast=int)
+SECURE_HSTS_INCLUDE_SUBDOMAINS = config(
+    'SECURE_HSTS_INCLUDE_SUBDOMAINS', default=not DEBUG, cast=env_bool)
+SECURE_HSTS_PRELOAD = config(
+    'SECURE_HSTS_PRELOAD', default=not DEBUG, cast=env_bool)
+SECURE_REFERRER_POLICY = 'same-origin'
 
 
 # Application definition
@@ -53,6 +76,7 @@ INSTALLED_APPS = [
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -145,6 +169,14 @@ USE_TZ = True
 
 STATIC_URL = 'static/'
 STATICFILES_DIRS = [BASE_DIR / 'static']
+STATIC_ROOT = BASE_DIR / 'staticfiles'
+
+# Hash filenames in production so browsers receive updated assets after deploys.
+STORAGES = {
+    'staticfiles': {
+        'BACKEND': 'whitenoise.storage.CompressedManifestStaticFilesStorage',
+    },
+}
 
 MEDIA_URL = 'media/'
 MEDIA_ROOT = BASE_DIR / 'media'

@@ -84,6 +84,7 @@ gunicorn.pid
 
 # Django collectstatic output
 static_root/
+staticfiles/
 
 # Local settings
 local_settings.py

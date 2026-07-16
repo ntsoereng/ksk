@@ -44,6 +44,11 @@ The public website and content-management foundation for Khoboko Law Chambers, b
    DB_PASSWORD=your_database_password
    DB_HOST=127.0.0.1
    DB_PORT=3306
+   SECURE_SSL_REDIRECT=false
+   SESSION_COOKIE_SECURE=false
+   CSRF_COOKIE_SECURE=false
+   SECURE_HSTS_SECONDS=0
+   SECURE_HSTS_PRELOAD=false
    ```
 
 3. Install frontend dependencies and generate the CSS.
@@ -83,7 +88,7 @@ npm run watch  # Rebuild CSS while editing templates
 
 ## Production checklist
 
-- Set `DEBUG=false` and use a unique production `SECRET_KEY`.
+- Set `DEBUG=false` and use a unique production `SECRET_KEY`. The security-cookie, HTTPS redirect, and HSTS settings automatically become secure defaults; configure HTTPS at the proxy or web server before deployment.
 - Configure the production hostname in `ALLOWED_HOSTS`.
 - Run `python manage.py migrate` and `python manage.py collectstatic`.
 - Configure persistent storage for media uploads (logos, attorney images, and article images).
