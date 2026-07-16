@@ -1,0 +1,38 @@
+@import "tailwindcss";
+
+@source "../../templates/**/*.html";
+@source "../../apps/**/*.html";
+
+@theme {
+  --font-serif: Georgia, Cambria, "Times New Roman", serif;
+  --color-maroon-950: #31060d;
+  --color-maroon-900: #4b0d18;
+  --color-maroon-800: #651323;
+  --color-maroon-700: #7f1d2d;
+  --color-maroon-600: #9b2637;
+  --color-khaki-50: #f8f4eb;
+  --color-khaki-100: #eee5d1;
+  --color-khaki-200: #ddcfad;
+  --color-khaki-300: #cdbb87;
+  --color-khaki-400: #bea56a;
+  --color-khaki-500: #ad8f4f;
+  --color-khaki-600: #927442;
+  --color-khaki-700: #765c34;
+  --color-khaki-800: #5b482c;
+}
+
+@layer base {
+  input, textarea {
+    @apply w-full rounded border border-stone-300 px-3 py-2 text-slate-900 outline-none focus:border-khaki-600 focus:ring-2 focus:ring-khaki-100;
+  }
+}
+
+@layer components {
+  .article-content h2 { @apply mt-10 font-serif text-3xl text-maroon-900; }
+  .article-content h3 { @apply mt-8 font-serif text-2xl text-maroon-900; }
+  .article-content p { @apply mt-5; }
+  .article-content ul { @apply mt-5 list-disc space-y-2 pl-6; }
+  .article-content ol { @apply mt-5 list-decimal space-y-2 pl-6; }
+  .article-content blockquote { @apply mt-6 border-l-4 border-khaki-400 pl-5 font-serif text-xl text-maroon-900; }
+  .article-content a { @apply text-maroon-800 underline; }
+}

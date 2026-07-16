@@ -1,0 +1,6 @@
+asgiref==3.12.1
+Django==6.0.7
+mysqlclient
+Pillow
+python-decouple
+sqlparse==0.5.5

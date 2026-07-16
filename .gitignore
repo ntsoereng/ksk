@@ -1,4 +1,4 @@
-# Byte-compiled / optimized files
+# Python bytecode
 __pycache__/
 *.py[cod]
 *$py.class
@@ -9,21 +9,29 @@ env/
 ENV/
 .venv/
 
-# Django stuff
+# Django runtime files
 db.sqlite3
 db.sqlite3-journal
 media/
-
-# Static files (optional if generated)
 staticfiles/
+*.sqlite3
 
-# Environment variables
+# Environment and secrets
 .env
 .env.*
+!.env.example
+*.env
+secrets.json
+*.pem
+*.key
+*.crt
 
 # Logs
 *.log
 logs/
+npm-debug.log*
+yarn-debug.log*
+pnpm-debug.log*
 
 # PyCharm
 .idea/
@@ -37,10 +45,10 @@ logs/
 # Windows
 Thumbs.db
 
-# Django migrations (optional)
-# Uncomment only if you intentionally do not track migrations
-# */migrations/*
-# !*/migrations/__init__.py
+# Node and frontend caches (the compiled CSS is intentionally tracked)
+node_modules/
+.npm/
+.parcel-cache/
 
 # Coverage
 .coverage
@@ -74,12 +82,6 @@ dump.rdb
 # Gunicorn
 gunicorn.pid
 
-# Secrets
-secrets.json
-*.pem
-*.key
-*.crt
-
 # Django collectstatic output
 static_root/
 
@@ -94,3 +96,6 @@ pip-wheel-metadata/
 
 # Cache
 .cache/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/

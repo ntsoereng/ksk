@@ -1,0 +1,50 @@
+{% load static %}
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="{{ site_information.tagline|default:'Khoboko Law Chambers — clear, trusted legal counsel.' }}">
+  <title>{% block title %}{{ site_information.firm_name|default:'Khoboko Law Chambers' }}{% endblock %}</title>
+  {% if site_information.favicon %}<link rel="icon" href="{{ site_information.favicon.url }}">{% endif %}
+  <link rel="stylesheet" href="{% static 'css/output.css' %}">
+</head>
+<body class="bg-stone-50 text-slate-800 antialiased">
+  <header class="border-b border-stone-200 bg-white">
+    <div class="mx-auto flex max-w-6xl items-center justify-between px-6 py-5">
+      <a class="font-serif text-xl font-bold tracking-tight text-maroon-900" href="{% url 'core:home' %}">{% if site_information.logo %}<img class="h-10 w-auto" src="{{ site_information.logo.url }}" alt="{{ site_information.firm_name }}">{% else %}{{ site_information.firm_name|default:'KHOBOKO LAW CHAMBERS' }}{% endif %}</a>
+      <nav class="hidden items-center gap-5 text-sm font-medium text-slate-700 md:flex" aria-label="Primary navigation">
+        <a class="hover:text-maroon-700" href="{% url 'core:about' %}">About us</a>
+        <a class="hover:text-maroon-700" href="{% url 'practice_areas:list' %}">Practice Areas</a>
+        <a class="hover:text-maroon-700" href="{% url 'attorneys:list' %}">Our Attorneys</a>
+        <a class="hover:text-maroon-700" href="{% url 'articles:list' %}">Insights</a>
+        <a class="rounded bg-maroon-800 px-4 py-2 text-white hover:bg-maroon-700" href="{% url 'core:contact' %}">Speak to us</a>
+      </nav>
+      <details class="relative md:hidden">
+        <summary class="cursor-pointer list-none rounded border border-khaki-300 px-3 py-2 text-sm font-semibold text-maroon-900 [&::-webkit-details-marker]:hidden">Menu</summary>
+        <nav class="absolute right-0 z-20 mt-2 flex w-56 flex-col overflow-hidden rounded border border-khaki-200 bg-white py-2 shadow-lg" aria-label="Mobile navigation">
+          <a class="px-4 py-3 text-sm font-medium text-slate-700 hover:bg-khaki-50 hover:text-maroon-800" href="{% url 'core:about' %}">About us</a>
+          <a class="px-4 py-3 text-sm font-medium text-slate-700 hover:bg-khaki-50 hover:text-maroon-800" href="{% url 'practice_areas:list' %}">Practice Areas</a>
+          <a class="px-4 py-3 text-sm font-medium text-slate-700 hover:bg-khaki-50 hover:text-maroon-800" href="{% url 'attorneys:list' %}">Our Attorneys</a>
+          <a class="px-4 py-3 text-sm font-medium text-slate-700 hover:bg-khaki-50 hover:text-maroon-800" href="{% url 'articles:list' %}">Insights</a>
+          <a class="mx-3 my-2 rounded bg-maroon-800 px-4 py-3 text-center text-sm font-semibold text-white hover:bg-maroon-700" href="{% url 'core:contact' %}">Speak to us</a>
+        </nav>
+      </details>
+    </div>
+  </header>
+  <main>
+    {% if messages %}
+      <div class="mx-auto max-w-6xl px-6 pt-6">
+        {% for message in messages %}<p class="rounded border border-emerald-200 bg-emerald-50 p-4 text-emerald-900">{{ message }}</p>{% endfor %}
+      </div>
+    {% endif %}
+    {% block content %}{% endblock %}
+  </main>
+  <footer class="mt-20 bg-maroon-950 text-khaki-100">
+    <div class="mx-auto flex max-w-6xl flex-col justify-between gap-4 px-6 py-10 text-sm md:flex-row">
+      <p>© {% now "Y" %} {{ site_information.firm_name|default:'Khoboko Law Chambers' }}. All rights reserved.</p>
+      <p><a class="hover:text-khaki-300" href="{% url 'core:privacy' %}">Privacy</a> <span class="px-1">·</span> <a class="hover:text-khaki-300" href="{% url 'core:terms' %}">Terms</a></p>
+    </div>
+  </footer>
+</body>
+</html>

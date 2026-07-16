@@ -1,0 +1,20 @@
+{% extends 'base.html' %}
+{% block title %}About us | {{ site_information.firm_name|default:'Khoboko Law Chambers' }}{% endblock %}
+{% block content %}
+<section class="bg-khaki-100 py-20">
+  <div class="mx-auto max-w-3xl px-6">
+    <p class="text-sm font-semibold uppercase tracking-wider text-maroon-700">About us</p>
+    <h1 class="mt-3 font-serif text-5xl leading-tight text-maroon-950">{{ site_information.about_title|default:'A firm grounded in service and integrity.' }}</h1>
+  </div>
+</section>
+<section class="mx-auto grid max-w-6xl gap-12 px-6 py-20 md:grid-cols-[2fr_1fr]">
+  <div>
+    <h2 class="font-serif text-3xl text-maroon-900">Who we are</h2>
+    <p class="mt-5 whitespace-pre-line text-lg leading-8 text-slate-700">{{ site_information.about_text|default:'Khoboko Law Chambers provides thoughtful, practical legal representation. We listen carefully, explain each step clearly, and work diligently to protect our clients’ interests.' }}</p>
+  </div>
+  <aside class="border-l-4 border-khaki-400 pl-6">
+    <p class="text-sm font-semibold uppercase tracking-wider text-maroon-700">Our commitment</p>
+    <p class="mt-3 whitespace-pre-line font-serif text-2xl leading-9 text-maroon-900">{{ site_information.mission_statement|default:'Clear counsel. Steady representation.' }}</p>
+  </aside>
+</section>
+{% endblock %}

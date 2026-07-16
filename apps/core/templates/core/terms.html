@@ -1,0 +1,13 @@
+{% extends 'base.html' %}
+{% block title %}Terms of use | {{ site_information.firm_name|default:'Khoboko Law Chambers' }}{% endblock %}
+{% block content %}
+<article class="mx-auto max-w-3xl px-6 py-20">
+  <p class="text-sm font-semibold uppercase tracking-wider text-maroon-700">Legal information</p>
+  <h1 class="mt-3 font-serif text-5xl text-maroon-950">Terms of use</h1>
+  <div class="mt-10 space-y-8 leading-8 text-slate-700">
+    <section><h2 class="font-serif text-2xl text-maroon-900">General information only</h2><p class="mt-2">The material on this website is provided for general information. It is not legal advice and should not be relied on as a substitute for advice tailored to your circumstances.</p></section>
+    <section><h2 class="font-serif text-2xl text-maroon-900">No attorney-client relationship</h2><p class="mt-2">Using this website or sending an enquiry does not create an attorney-client relationship. Such a relationship begins only when we expressly agree to represent you.</p></section>
+    <section><h2 class="font-serif text-2xl text-maroon-900">Confidentiality</h2><p class="mt-2">Please do not send confidential, sensitive, or time-critical information through the website contact form.</p></section>
+  </div>
+</article>
+{% endblock %}

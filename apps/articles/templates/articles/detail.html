@@ -1,0 +1,6 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}{{ article.title }} | {{ site_information.firm_name|default:'Khoboko Law Chambers' }}{% endblock %}
+{% block content %}
+<article class="mx-auto max-w-3xl px-6 py-16"><a class="text-sm font-semibold text-maroon-800" href="{% url 'articles:list' %}">← All insights</a><p class="mt-8 text-sm text-maroon-700">{{ article.published_at|date:'d F Y' }}{% if article.author %} · By {{ article.author }}{% endif %}</p><h1 class="mt-3 font-serif text-5xl leading-tight text-maroon-950">{{ article.title }}</h1><p class="mt-5 text-lg leading-8 text-slate-600">{{ article.excerpt }}</p>{% if article.featured_image %}<img class="mt-10 aspect-video w-full rounded object-cover" src="{{ article.featured_image.url }}" alt="{{ article.title }}">{% else %}<img class="mt-10 aspect-video w-full rounded object-cover" src="{% static 'images/default-article.svg' %}" alt="">{% endif %}<div class="article-content mt-10 text-lg leading-8 text-slate-700">{{ article.content|safe }}</div></article>
+{% endblock %}
