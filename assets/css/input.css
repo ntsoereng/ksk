@@ -22,17 +22,52 @@
 }
 
 @layer base {
+  html {
+    scroll-behavior: smooth;
+    scroll-padding-top: 6rem;
+  }
+
+  body {
+    @apply min-h-screen;
+  }
+
+  a, button, summary, input, textarea {
+    @apply focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-maroon-700;
+  }
+
   input, textarea {
-    @apply w-full rounded border border-stone-300 px-3 py-2 text-slate-900 outline-none focus:border-khaki-600 focus:ring-2 focus:ring-khaki-100;
+    @apply w-full rounded-lg border border-stone-300 bg-white px-4 py-3 text-slate-900 shadow-sm outline-none transition focus:border-khaki-600 focus:ring-2 focus:ring-khaki-100;
+  }
+
+  textarea {
+    @apply min-h-36 resize-y;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    html { scroll-behavior: auto; }
+    *, *::before, *::after {
+      scroll-behavior: auto !important;
+      transition-duration: 0.01ms !important;
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+    }
   }
 }
 
 @layer components {
+  .eyebrow { @apply text-xs font-bold uppercase tracking-[0.2em] text-maroon-700; }
+  .page-title { @apply mt-3 max-w-4xl font-serif text-4xl leading-tight text-maroon-950 sm:text-5xl lg:text-6xl; }
+  .section-title { @apply font-serif text-3xl leading-tight text-maroon-950 sm:text-4xl; }
+  .card { @apply rounded-xl border border-khaki-200 bg-white shadow-sm; }
+  .card-link { @apply transition duration-300 hover:-translate-y-1 hover:border-khaki-400 hover:shadow-lg; }
+  .button-primary { @apply inline-flex min-h-11 items-center justify-center rounded-lg bg-maroon-800 px-5 py-3 text-sm font-bold text-white shadow-sm transition hover:bg-maroon-700; }
+  .button-secondary { @apply inline-flex min-h-11 items-center justify-center rounded-lg border border-khaki-400 bg-white px-5 py-3 text-sm font-bold text-maroon-900 transition hover:bg-khaki-50; }
+  .text-link { @apply inline-flex items-center gap-1 font-semibold text-maroon-800 underline decoration-khaki-400 underline-offset-4 transition hover:text-maroon-600; }
   .article-content h2 { @apply mt-10 font-serif text-3xl text-maroon-900; }
   .article-content h3 { @apply mt-8 font-serif text-2xl text-maroon-900; }
   .article-content p { @apply mt-5; }
   .article-content ul { @apply mt-5 list-disc space-y-2 pl-6; }
   .article-content ol { @apply mt-5 list-decimal space-y-2 pl-6; }
   .article-content blockquote { @apply mt-6 border-l-4 border-khaki-400 pl-5 font-serif text-xl text-maroon-900; }
-  .article-content a { @apply text-maroon-800 underline; }
+  .article-content a { @apply text-maroon-800 underline decoration-khaki-400 underline-offset-4; }
 }

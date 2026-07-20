@@ -1,21 +1,57 @@
 {% extends 'base.html' %}
+{% load static %}
 {% block title %}Khoboko Law Chambers | Trusted legal counsel{% endblock %}
 {% block content %}
-<section class="bg-maroon-950 py-24 text-white{% if site_information.hero_image %} bg-cover bg-center{% endif %}"{% if site_information.hero_image %} style="background-image: linear-gradient(rgba(49, 6, 13, .88), rgba(49, 6, 13, .88)), url('{{ site_information.hero_image.url }}');"{% endif %}>
+<section class="relative isolate overflow-hidden bg-maroon-950 py-20 text-white sm:py-28{% if site_information.hero_image %} bg-cover bg-center{% endif %}"{% if site_information.hero_image %} style="background-image: linear-gradient(rgba(49, 6, 13, .9), rgba(49, 6, 13, .86)), url('{{ site_information.hero_image.url }}');"{% endif %}>
+  {% if not site_information.hero_image %}<svg class="absolute -right-40 top-1/2 -z-10 h-[42rem] w-[42rem] -translate-y-1/2 text-khaki-400 opacity-10" viewBox="0 0 600 600" fill="none" aria-hidden="true"><circle cx="300" cy="300" r="220" stroke="currentColor"/><circle cx="300" cy="300" r="160" stroke="currentColor"/><path d="M300 40v520M40 300h520M116 116l368 368M484 116 116 484" stroke="currentColor"/></svg>{% endif %}
   <div class="mx-auto max-w-6xl px-6">
-    <p class="mb-4 text-sm font-semibold uppercase tracking-[0.24em] text-khaki-300">{{ site_information.firm_name|default:'Khoboko Law Chambers' }}</p>
-    <h1 class="max-w-3xl font-serif text-5xl leading-tight md:text-6xl">{{ site_information.hero_title|default:'Guiding you through the moments that matter.' }}</h1>
-    <p class="mt-6 max-w-2xl text-lg leading-8 text-khaki-100">{{ site_information.hero_text|default:'Practical, responsive legal counsel for individuals, families, and businesses.' }}</p>
-    <a class="mt-9 inline-block rounded bg-khaki-400 px-6 py-3 font-semibold text-maroon-950 hover:bg-khaki-300" href="{% url 'core:contact' %}">{{ site_information.hero_cta_label|default:'Request a consultation' }}</a>
+    <p class="mb-4 text-xs font-bold uppercase tracking-[0.24em] text-khaki-300">{{ site_information.firm_name|default:'Khoboko Law Chambers' }}</p>
+    <h1 class="max-w-4xl font-serif text-4xl leading-tight sm:text-5xl lg:text-7xl">{{ site_information.hero_title|default:'Guiding you through the moments that matter.' }}</h1>
+    <p class="mt-6 max-w-2xl text-lg leading-8 text-khaki-100 sm:text-xl">{{ site_information.hero_text|default:'Practical, responsive legal counsel for individuals, families, and businesses.' }}</p>
+    <div class="mt-9 flex flex-col gap-3 sm:flex-row">
+      <a class="inline-flex min-h-12 items-center justify-center rounded-lg bg-khaki-400 px-6 py-3 font-bold text-maroon-950 shadow-sm transition hover:bg-khaki-300" href="{% url 'core:contact' %}">{{ site_information.hero_cta_label|default:'Request a consultation' }}</a>
+      <a class="inline-flex min-h-12 items-center justify-center rounded-lg border border-khaki-300/60 px-6 py-3 font-bold text-white transition hover:bg-white/10" href="#services">Explore our services</a>
+    </div>
   </div>
 </section>
-<section class="mx-auto max-w-6xl px-6 py-20">
-  <div class="flex items-end justify-between gap-6"><div><p class="text-sm font-semibold uppercase tracking-wider text-maroon-700">How we help</p><h2 class="mt-2 font-serif text-4xl text-maroon-950">Our practice areas</h2></div><a class="text-sm font-semibold text-maroon-800" href="{% url 'practice_areas:list' %}">View all services →</a></div>
+
+<section id="services" class="mx-auto max-w-6xl scroll-mt-24 px-6 py-16 sm:py-20">
+  <div class="flex flex-col gap-5 sm:flex-row sm:items-end sm:justify-between">
+    <div><p class="eyebrow">How we help</p><h2 class="section-title mt-2">Our practice areas</h2></div>
+    <a class="text-link" href="{% url 'practice_areas:list' %}">View all services <span aria-hidden="true">→</span></a>
+  </div>
   <div class="mt-10 grid gap-5 md:grid-cols-3">
     {% for area in featured_practice_areas %}
-      <a class="rounded border border-khaki-200 bg-white p-7 shadow-sm transition hover:-translate-y-1 hover:shadow-md" href="{{ area.get_absolute_url }}"><h3 class="font-serif text-2xl text-maroon-950">{{ area.name }}</h3><p class="mt-3 leading-7 text-slate-600">{{ area.short_description }}</p></a>
-    {% empty %}<p class="text-slate-600">Our services will be listed here shortly.</p>{% endfor %}
+      <a class="card card-link group p-7" href="{{ area.get_absolute_url }}">
+        <span class="flex h-11 w-11 items-center justify-center rounded-full bg-khaki-100 text-maroon-800" aria-hidden="true"><svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 3v18M5 7h14M7 7l-4 7h8L7 7Zm10 0-4 7h8l-4-7ZM7 21h10"/></svg></span>
+        <h3 class="mt-5 font-serif text-2xl text-maroon-950">{{ area.name }}</h3>
+        <p class="mt-3 leading-7 text-slate-600">{{ area.short_description }}</p>
+        <span class="mt-5 inline-block text-sm font-bold text-maroon-800 group-hover:text-maroon-600">Learn more <span aria-hidden="true">→</span></span>
+      </a>
+    {% empty %}<div class="card p-7 text-slate-600 md:col-span-3">Our services will be listed here shortly.</div>{% endfor %}
   </div>
 </section>
-<section class="bg-khaki-100 py-20"><div class="mx-auto max-w-6xl px-6"><p class="text-sm font-semibold uppercase tracking-wider text-maroon-700">Our people</p><h2 class="mt-2 font-serif text-4xl text-maroon-950">Meet the team</h2><div class="mt-9 grid gap-5 md:grid-cols-3">{% for attorney in featured_attorneys %}<a class="rounded bg-white p-6 hover:shadow-md" href="{{ attorney.get_absolute_url }}"><p class="font-serif text-2xl text-maroon-950">{{ attorney }}</p><p class="mt-1 text-maroon-800">{{ attorney.title }}</p></a>{% empty %}<p>Attorney profiles will be published soon.</p>{% endfor %}</div></div></section>
+
+<section class="bg-khaki-100 py-16 sm:py-20">
+  <div class="mx-auto max-w-6xl px-6">
+    <div class="flex flex-col gap-5 sm:flex-row sm:items-end sm:justify-between"><div><p class="eyebrow">Our people</p><h2 class="section-title mt-2">Meet the team</h2></div><a class="text-link" href="{% url 'attorneys:list' %}">Meet all attorneys <span aria-hidden="true">→</span></a></div>
+    <div class="mt-10 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+      {% for attorney in featured_attorneys %}
+        <a class="card card-link group overflow-hidden" href="{{ attorney.get_absolute_url }}">
+          {% if attorney.photo %}<img class="aspect-[4/3] w-full object-cover object-top" src="{{ attorney.photo.url }}" alt="Portrait of {{ attorney }}" loading="lazy">{% else %}<img class="aspect-[4/3] w-full object-cover object-top" src="{% static 'images/default-attorney.svg' %}" alt="" loading="lazy">{% endif %}
+          <div class="p-6"><h3 class="font-serif text-2xl text-maroon-950">{{ attorney }}</h3><p class="mt-1 font-semibold text-maroon-700">{{ attorney.title }}</p><span class="mt-4 inline-block text-sm font-bold text-maroon-800">View profile <span aria-hidden="true">→</span></span></div>
+        </a>
+      {% empty %}<div class="card p-7 text-slate-600 sm:col-span-2 lg:col-span-3">Attorney profiles will be published soon.</div>{% endfor %}
+    </div>
+  </div>
+</section>
+
+<section class="mx-auto max-w-6xl px-6 py-16 sm:py-20">
+  <div class="rounded-2xl bg-maroon-900 px-6 py-10 text-center text-white sm:px-10 sm:py-14">
+    <p class="text-xs font-bold uppercase tracking-[0.2em] text-khaki-300">Ready when you are</p>
+    <h2 class="mx-auto mt-3 max-w-2xl font-serif text-3xl sm:text-4xl">Talk to a legal team that listens first.</h2>
+    <p class="mx-auto mt-4 max-w-2xl leading-7 text-khaki-100">Tell us briefly how we can help. We will respond with the appropriate next step.</p>
+    <a class="mt-7 inline-flex min-h-12 items-center justify-center rounded-lg bg-khaki-400 px-6 py-3 font-bold text-maroon-950 transition hover:bg-khaki-300" href="{% url 'core:contact' %}">Start a conversation</a>
+  </div>
+</section>
 {% endblock %}

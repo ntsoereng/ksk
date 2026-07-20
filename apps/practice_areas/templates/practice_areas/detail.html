@@ -1,3 +1,8 @@
 {% extends 'base.html' %}
 {% block title %}{{ practice_area.name }} | Khoboko Law Chambers{% endblock %}
-{% block content %}<article class="mx-auto max-w-3xl px-6 py-20"><a class="text-sm font-semibold text-maroon-800" href="{% url 'practice_areas:list' %}">← All practice areas</a><h1 class="mt-5 font-serif text-5xl text-maroon-950">{{ practice_area.name }}</h1><p class="mt-7 whitespace-pre-line text-lg leading-8 text-slate-700">{{ practice_area.description }}</p><a class="mt-10 inline-block rounded bg-maroon-800 px-5 py-3 font-semibold text-white hover:bg-maroon-700" href="{% url 'core:contact' %}">Discuss your matter</a></article>{% endblock %}
+{% block content %}
+<article>
+  <header class="border-b border-khaki-200 bg-khaki-100 py-14 sm:py-20"><div class="mx-auto max-w-4xl px-6"><a class="text-link text-sm" href="{% url 'practice_areas:list' %}"><span aria-hidden="true">←</span> All practice areas</a><p class="eyebrow mt-8">How we help</p><h1 class="page-title">{{ practice_area.name }}</h1></div></header>
+  <div class="mx-auto grid max-w-5xl gap-10 px-6 py-12 sm:py-16 lg:grid-cols-[1fr_280px]"><div class="whitespace-pre-line text-lg leading-8 text-slate-700">{{ practice_area.description }}</div><aside class="h-fit rounded-xl bg-maroon-950 p-7 text-white lg:sticky lg:top-28"><h2 class="font-serif text-2xl">Discuss your matter</h2><p class="mt-3 leading-7 text-khaki-100">Contact our team for guidance tailored to your circumstances.</p><a class="mt-6 inline-flex min-h-11 w-full items-center justify-center rounded-lg bg-khaki-400 px-5 py-3 text-sm font-bold text-maroon-950 transition hover:bg-khaki-300" href="{% url 'core:contact' %}">Start a conversation</a></aside></div>
+</article>
+{% endblock %}

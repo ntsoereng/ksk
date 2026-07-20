@@ -9,22 +9,26 @@
   {% if site_information.favicon %}<link rel="icon" href="{{ site_information.favicon.url }}">{% endif %}
   <link rel="stylesheet" href="{% static 'css/output.css' %}">
 </head>
-<body class="bg-stone-50 text-slate-800 antialiased">
-  <header class="border-b border-stone-200 bg-white">
-    <div class="mx-auto flex max-w-6xl items-center justify-between px-6 py-5">
-      <a class="font-serif text-xl font-bold tracking-tight text-maroon-900" href="{% url 'core:home' %}">
-        <img class="h-10 w-auto" src="{% if site_information.logo %}{{ site_information.logo.url }}{% else %}{% static 'images/branding/klc-logo-navbar.png' %}{% endif %}" alt="{{ site_information.firm_name|default:'Khoboko Law Chambers' }}">
+<body class="flex min-h-screen flex-col bg-stone-50 text-slate-800 antialiased">
+  <a class="sr-only fixed left-4 top-4 z-[60] rounded bg-white px-4 py-3 font-semibold text-maroon-900 shadow-lg focus:not-sr-only" href="#main-content">Skip to main content</a>
+  <header class="sticky top-0 z-50 border-b border-stone-200/90 bg-white/95 shadow-sm backdrop-blur-md">
+    <div class="mx-auto flex h-20 max-w-6xl items-center justify-between gap-6 px-4 sm:px-6">
+      <a class="shrink-0 rounded-sm" href="{% url 'core:home' %}" aria-label="{{ site_information.firm_name|default:'Khoboko Law Chambers' }} — home">
+        <img class="h-10 w-auto sm:h-11" src="{% if site_information.logo %}{{ site_information.logo.url }}{% else %}{% static 'images/branding/klc-logo-navbar.png' %}{% endif %}" alt="{{ site_information.firm_name|default:'Khoboko Law Chambers' }}">
       </a>
-      <nav class="hidden items-center gap-5 text-sm font-medium text-slate-700 md:flex" aria-label="Primary navigation">
-        <a class="hover:text-maroon-700" href="{% url 'core:about' %}">About us</a>
-        <a class="hover:text-maroon-700" href="{% url 'practice_areas:list' %}">Practice Areas</a>
-        <a class="hover:text-maroon-700" href="{% url 'attorneys:list' %}">Our Attorneys</a>
-        <a class="hover:text-maroon-700" href="{% url 'articles:list' %}">Insights</a>
-        <a class="rounded bg-maroon-800 px-4 py-2 text-white hover:bg-maroon-700" href="{% url 'core:contact' %}">Speak to us</a>
+      <nav class="hidden items-center gap-1 text-sm font-semibold text-slate-700 lg:flex" aria-label="Primary navigation">
+        <a class="rounded-lg px-3 py-2 transition hover:bg-khaki-50 hover:text-maroon-800{% if request.resolver_match.url_name == 'about' %} bg-khaki-50 text-maroon-900{% endif %}" href="{% url 'core:about' %}"{% if request.resolver_match.url_name == 'about' %} aria-current="page"{% endif %}>About us</a>
+        <a class="rounded-lg px-3 py-2 transition hover:bg-khaki-50 hover:text-maroon-800{% if request.resolver_match.namespace == 'practice_areas' %} bg-khaki-50 text-maroon-900{% endif %}" href="{% url 'practice_areas:list' %}"{% if request.resolver_match.namespace == 'practice_areas' %} aria-current="page"{% endif %}>Practice areas</a>
+        <a class="rounded-lg px-3 py-2 transition hover:bg-khaki-50 hover:text-maroon-800{% if request.resolver_match.namespace == 'attorneys' %} bg-khaki-50 text-maroon-900{% endif %}" href="{% url 'attorneys:list' %}"{% if request.resolver_match.namespace == 'attorneys' %} aria-current="page"{% endif %}>Our attorneys</a>
+        <a class="rounded-lg px-3 py-2 transition hover:bg-khaki-50 hover:text-maroon-800{% if request.resolver_match.namespace == 'articles' %} bg-khaki-50 text-maroon-900{% endif %}" href="{% url 'articles:list' %}"{% if request.resolver_match.namespace == 'articles' %} aria-current="page"{% endif %}>Insights</a>
+        <a class="button-primary ml-2" href="{% url 'core:contact' %}">Speak to us</a>
       </nav>
-      <details class="relative md:hidden">
-        <summary class="cursor-pointer list-none rounded border border-khaki-300 px-3 py-2 text-sm font-semibold text-maroon-900 [&::-webkit-details-marker]:hidden">Menu</summary>
-        <nav class="absolute right-0 z-20 mt-2 flex w-56 flex-col overflow-hidden rounded border border-khaki-200 bg-white py-2 shadow-lg" aria-label="Mobile navigation">
+      <details class="group relative lg:hidden">
+        <summary class="flex min-h-11 cursor-pointer list-none items-center gap-2 rounded-lg border border-khaki-300 px-3 py-2 text-sm font-bold text-maroon-900 transition hover:bg-khaki-50 [&::-webkit-details-marker]:hidden">
+          <span>Menu</span>
+          <svg class="h-4 w-4 transition group-open:rotate-180" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="m5 7.5 5 5 5-5"/></svg>
+        </summary>
+        <nav class="absolute right-0 z-20 mt-2 flex w-64 flex-col overflow-hidden rounded-xl border border-khaki-200 bg-white py-2 shadow-xl" aria-label="Mobile navigation">
           <a class="px-4 py-3 text-sm font-medium text-slate-700 hover:bg-khaki-50 hover:text-maroon-800" href="{% url 'core:about' %}">About us</a>
           <a class="px-4 py-3 text-sm font-medium text-slate-700 hover:bg-khaki-50 hover:text-maroon-800" href="{% url 'practice_areas:list' %}">Practice Areas</a>
           <a class="px-4 py-3 text-sm font-medium text-slate-700 hover:bg-khaki-50 hover:text-maroon-800" href="{% url 'attorneys:list' %}">Our Attorneys</a>
@@ -34,7 +38,7 @@
       </details>
     </div>
   </header>
-  <main>
+  <main id="main-content" class="flex-1" tabindex="-1">
     {% if messages %}
       <div class="mx-auto max-w-6xl px-6 pt-6">
         {% for message in messages %}<p class="rounded border border-emerald-200 bg-emerald-50 p-4 text-emerald-900">{{ message }}</p>{% endfor %}
@@ -43,9 +47,16 @@
     {% block content %}{% endblock %}
   </main>
   <footer class="mt-20 bg-maroon-950 text-khaki-100">
-    <div class="mx-auto flex max-w-6xl flex-col justify-between gap-4 px-6 py-10 text-sm md:flex-row">
-      <p>© {% now "Y" %} {{ site_information.firm_name|default:'Khoboko Law Chambers' }}. All rights reserved.</p>
-      <p><a class="hover:text-khaki-300" href="{% url 'core:privacy' %}">Privacy</a> <span class="px-1">·</span> <a class="hover:text-khaki-300" href="{% url 'core:terms' %}">Terms</a></p>
+    <div class="mx-auto grid max-w-6xl gap-8 px-6 py-12 text-sm md:grid-cols-[1fr_auto] md:items-end">
+      <div>
+        <p class="font-serif text-xl text-white">{{ site_information.firm_name|default:'Khoboko Law Chambers' }}</p>
+        <p class="mt-2 max-w-xl text-khaki-200">{{ site_information.tagline|default:'Clear, trusted legal counsel.' }}</p>
+        <p class="mt-5 text-khaki-300">© {% now "Y" %} {{ site_information.firm_name|default:'Khoboko Law Chambers' }}. All rights reserved.</p>
+      </div>
+      <nav class="flex gap-5" aria-label="Legal">
+        <a class="rounded hover:text-white" href="{% url 'core:privacy' %}">Privacy</a>
+        <a class="rounded hover:text-white" href="{% url 'core:terms' %}">Terms</a>
+      </nav>
     </div>
   </footer>
 </body>

@@ -1,3 +1,12 @@
 {% extends 'base.html' %}
+{% load static %}
 {% block title %}{{ attorney }} | Khoboko Law Chambers{% endblock %}
-{% block content %}<article class="mx-auto max-w-3xl px-6 py-20"><a class="text-sm font-semibold text-maroon-800" href="{% url 'attorneys:list' %}">← Our attorneys</a><p class="mt-8 text-sm font-semibold uppercase tracking-wider text-maroon-700">{{ attorney.title }}</p><h1 class="mt-2 font-serif text-5xl text-maroon-950">{{ attorney }}</h1>{% if attorney.admission %}<p class="mt-4 text-slate-600">{{ attorney.admission }}</p>{% endif %}<p class="mt-8 whitespace-pre-line text-lg leading-8 text-slate-700">{{ attorney.biography }}</p>{% if attorney.practice_areas.all %}<h2 class="mt-10 font-serif text-2xl">Areas of focus</h2><ul class="mt-3 list-inside list-disc text-slate-700">{% for area in attorney.practice_areas.all %}<li><a class="text-maroon-800" href="{{ area.get_absolute_url }}">{{ area.name }}</a></li>{% endfor %}</ul>{% endif %}<a class="mt-10 inline-block rounded bg-maroon-800 px-5 py-3 font-semibold text-white hover:bg-maroon-700" href="{% url 'core:contact' %}">Contact {{ attorney.user.first_name|default:'our team' }}</a></article>{% endblock %}
+{% block content %}
+<article class="mx-auto max-w-6xl px-6 py-12 sm:py-16">
+  <a class="text-link text-sm" href="{% url 'attorneys:list' %}"><span aria-hidden="true">←</span> Our attorneys</a>
+  <div class="mt-8 grid gap-10 lg:grid-cols-[minmax(0,360px)_1fr] lg:gap-14">
+    <div>{% if attorney.photo %}<img class="aspect-[4/5] w-full rounded-2xl object-cover object-top shadow-sm" src="{{ attorney.photo.url }}" alt="Portrait of {{ attorney }}">{% else %}<img class="aspect-[4/5] w-full rounded-2xl object-cover object-top shadow-sm" src="{% static 'images/default-attorney.svg' %}" alt="">{% endif %}</div>
+    <div class="self-center"><p class="eyebrow">{{ attorney.title }}</p><h1 class="page-title">{{ attorney }}</h1>{% if attorney.admission %}<p class="mt-4 font-medium text-slate-600">{{ attorney.admission }}</p>{% endif %}<p class="mt-7 whitespace-pre-line text-lg leading-8 text-slate-700">{{ attorney.biography }}</p>{% if attorney.practice_areas.all %}<div class="mt-9"><h2 class="font-serif text-2xl text-maroon-950">Areas of focus</h2><ul class="mt-4 flex flex-wrap gap-2">{% for area in attorney.practice_areas.all %}<li><a class="inline-flex rounded-full border border-khaki-300 bg-khaki-50 px-4 py-2 text-sm font-semibold text-maroon-800 transition hover:border-khaki-500" href="{{ area.get_absolute_url }}">{{ area.name }}</a></li>{% endfor %}</ul></div>{% endif %}<a class="button-primary mt-9" href="{% url 'core:contact' %}">Contact {{ attorney.user.first_name|default:'our team' }}</a></div>
+  </div>
+</article>
+{% endblock %}

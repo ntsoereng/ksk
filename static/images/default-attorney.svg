@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 900" role="img" aria-labelledby="title desc">
+  <title id="title">Attorney profile placeholder</title>
+  <desc id="desc">A refined maroon and khaki silhouette used when a profile photograph is unavailable.</desc>
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop stop-color="#f8f4eb"/>
+      <stop offset="1" stop-color="#ddcfad"/>
+    </linearGradient>
+    <linearGradient id="coat" x1="0" y1="0" x2="1" y2="1">
+      <stop stop-color="#7f1d2d"/>
+      <stop offset="1" stop-color="#31060d"/>
+    </linearGradient>
+  </defs>
+  <rect width="800" height="900" fill="url(#bg)"/>
+  <circle cx="650" cy="150" r="170" fill="none" stroke="#bea56a" stroke-width="2" opacity=".55"/>
+  <circle cx="130" cy="770" r="230" fill="none" stroke="#bea56a" stroke-width="2" opacity=".45"/>
+  <circle cx="400" cy="320" r="150" fill="#cdbb87"/>
+  <path d="M112 900c24-236 130-356 288-356s264 120 288 356H112Z" fill="url(#coat)"/>
+  <path d="m300 565 100 155 100-155-44-22-56 63-56-63-44 22Z" fill="#fff" opacity=".95"/>
+  <path d="m400 606-24 51 24 78 24-78-24-51Z" fill="#ad8f4f"/>
+</svg>
