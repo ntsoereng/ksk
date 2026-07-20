@@ -175,6 +175,9 @@ STATIC_ROOT = '/home/khobokol/public_html/static'
 
 # Hash filenames in production so browsers receive updated assets after deploys.
 STORAGES = {
+    'default': {
+        'BACKEND': 'django.core.files.storage.FileSystemStorage',
+    },
     'staticfiles': {
         'BACKEND': 'whitenoise.storage.CompressedManifestStaticFilesStorage',
     },
