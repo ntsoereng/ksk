@@ -5,3 +5,4 @@ Pillow
 python-decouple
 sqlparse==0.5.5
 whitenoise
+pymysql
