@@ -181,7 +181,7 @@ STORAGES = {
 }
 
 MEDIA_URL = 'media/'
-MEDIA_ROOT = BASE_DIR / 'media'
+MEDIA_ROOT = Path("/home/khobokol/media")
 
 AUTH_USER_MODEL = 'accounts.User'
 LOGIN_URL = 'admin:login'
