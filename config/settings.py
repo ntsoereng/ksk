@@ -169,7 +169,9 @@ USE_TZ = True
 
 STATIC_URL = 'static/'
 STATICFILES_DIRS = [BASE_DIR / 'static']
-STATIC_ROOT = BASE_DIR / 'staticfiles'
+# STATIC_ROOT = BASE_DIR / 'staticfiles'
+
+STATIC_ROOT = '/home/khobokol/public_html/static'
 
 # Hash filenames in production so browsers receive updated assets after deploys.
 STORAGES = {
