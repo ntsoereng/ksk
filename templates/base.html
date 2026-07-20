@@ -12,7 +12,9 @@
 <body class="bg-stone-50 text-slate-800 antialiased">
   <header class="border-b border-stone-200 bg-white">
     <div class="mx-auto flex max-w-6xl items-center justify-between px-6 py-5">
-      <a class="font-serif text-xl font-bold tracking-tight text-maroon-900" href="{% url 'core:home' %}">{% if site_information.logo %}<img class="h-10 w-auto" src="{{ site_information.logo.url }}" alt="{{ site_information.firm_name }}">{% else %}{{ site_information.firm_name|default:'KHOBOKO LAW CHAMBERS' }}{% endif %}</a>
+      <a class="font-serif text-xl font-bold tracking-tight text-maroon-900" href="{% url 'core:home' %}">
+        <img class="h-10 w-auto" src="{% if site_information.logo %}{{ site_information.logo.url }}{% else %}{% static 'images/branding/klc-logo-navbar.png' %}{% endif %}" alt="{{ site_information.firm_name|default:'Khoboko Law Chambers' }}">
+      </a>
       <nav class="hidden items-center gap-5 text-sm font-medium text-slate-700 md:flex" aria-label="Primary navigation">
         <a class="hover:text-maroon-700" href="{% url 'core:about' %}">About us</a>
         <a class="hover:text-maroon-700" href="{% url 'practice_areas:list' %}">Practice Areas</a>
