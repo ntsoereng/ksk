@@ -4,10 +4,14 @@
 <article class="mx-auto max-w-3xl px-6 py-14 sm:py-20">
   <p class="eyebrow">Legal information</p>
   <h1 class="page-title">Terms of use</h1>
+  {% if site_information.terms_of_use %}
+  <div class="mt-10 whitespace-pre-line leading-8 text-slate-700">{{ site_information.terms_of_use }}</div>
+  {% else %}
   <div class="mt-10 space-y-10 leading-8 text-slate-700">
     <section><h2 class="font-serif text-2xl text-maroon-900">General information only</h2><p class="mt-2">The material on this website is provided for general information. It is not legal advice and should not be relied on as a substitute for advice tailored to your circumstances.</p></section>
     <section><h2 class="font-serif text-2xl text-maroon-900">No attorney-client relationship</h2><p class="mt-2">Using this website or sending an enquiry does not create an attorney-client relationship. Such a relationship begins only when we expressly agree to represent you.</p></section>
     <section><h2 class="font-serif text-2xl text-maroon-900">Confidentiality</h2><p class="mt-2">Please do not send confidential, sensitive, or time-critical information through the website contact form.</p></section>
   </div>
+  {% endif %}
 </article>
 {% endblock %}

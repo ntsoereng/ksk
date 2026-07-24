@@ -1,5 +1,6 @@
 from django.db import models
 from django.urls import reverse
+from apps.articles.sanitizers import sanitize_rich_text
 
 
 class PracticeArea(models.Model):
@@ -18,6 +19,10 @@ class PracticeArea(models.Model):
 
     def __str__(self):
         return self.name
+
+    def save(self, *args, **kwargs):
+        self.description = sanitize_rich_text(self.description)
+        super().save(*args, **kwargs)
 
     def get_absolute_url(self):
         return reverse('practice_areas:detail', kwargs={'slug': self.slug})

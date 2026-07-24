@@ -1,8 +1,11 @@
 {% extends 'base.html' %}
-{% block title %}{{ practice_area.name }} | Khoboko Law Chambers{% endblock %}
+{% block title %}{{ practice_area.name }} | {{ site_information.firm_name|default:'Khoboko Law Chambers' }}{% endblock %}
+{% block meta_description %}{{ practice_area.short_description }}{% endblock %}
+{% block og_title %}{{ practice_area.name }} | {{ site_information.firm_name|default:'Khoboko Law Chambers' }}{% endblock %}
+{% block og_description %}{{ practice_area.short_description }}{% endblock %}
 {% block content %}
 <article>
   <header class="border-b border-khaki-200 bg-khaki-100 py-14 sm:py-20"><div class="mx-auto max-w-4xl px-6"><a class="text-link text-sm" href="{% url 'practice_areas:list' %}"><span aria-hidden="true">←</span> All practice areas</a><p class="eyebrow mt-8">How we help</p><h1 class="page-title">{{ practice_area.name }}</h1></div></header>
-  <div class="mx-auto grid max-w-5xl gap-10 px-6 py-12 sm:py-16 lg:grid-cols-[1fr_280px]"><div class="whitespace-pre-line text-lg leading-8 text-slate-700">{{ practice_area.description }}</div><aside class="h-fit rounded-xl bg-maroon-950 p-7 text-white lg:sticky lg:top-28"><h2 class="font-serif text-2xl">Discuss your matter</h2><p class="mt-3 leading-7 text-khaki-100">Contact our team for guidance tailored to your circumstances.</p><a class="mt-6 inline-flex min-h-11 w-full items-center justify-center rounded-lg bg-khaki-400 px-5 py-3 text-sm font-bold text-maroon-950 transition hover:bg-khaki-300" href="{% url 'core:contact' %}">Start a conversation</a></aside></div>
+  <div class="mx-auto grid max-w-5xl gap-10 px-6 py-12 sm:py-16 lg:grid-cols-[1fr_280px]"><div class="article-content text-lg leading-8 text-slate-700">{{ practice_area.description|safe }}</div><aside class="h-fit rounded-xl bg-maroon-950 p-7 text-white lg:sticky lg:top-28"><h2 class="font-serif text-2xl">Discuss your matter</h2><p class="mt-3 leading-7 text-khaki-100">Contact our team for guidance tailored to your circumstances.</p><a class="mt-6 inline-flex min-h-11 w-full items-center justify-center rounded-lg bg-khaki-400 px-5 py-3 text-sm font-bold text-maroon-950 transition hover:bg-khaki-300" href="{% url 'core:contact' %}">Start a conversation</a></aside></div>
 </article>
 {% endblock %}

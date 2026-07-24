@@ -1,0 +1,29 @@
+{% extends 'base.html' %}
+{% block title %}{{ content_config.title }} | Staff portal{% endblock %}
+{% block robots %}noindex, nofollow{% endblock %}
+{% block content %}
+{% include 'core/_staff_nav.html' %}
+<section class="mx-auto max-w-7xl px-6 py-12 sm:px-8">
+  <div class="flex flex-col gap-5 sm:flex-row sm:items-end sm:justify-between">
+    <div><p class="eyebrow">Manage content</p><h1 class="mt-2 font-serif text-4xl text-maroon-950">{{ content_config.title }}</h1></div>
+    {% if can_add %}<a class="button-primary" href="{% url 'core:staff_content_add' section %}">Add {{ content_config.singular }}</a>{% endif %}
+  </div>
+  <div class="mt-8 overflow-hidden rounded-xl border border-khaki-200 bg-white shadow-sm">
+    <div class="overflow-x-auto">
+      <table class="w-full min-w-[720px] text-left">
+        <thead class="bg-khaki-50 text-xs uppercase tracking-wider text-maroon-800"><tr><th class="px-5 py-4">Title / name</th><th class="px-5 py-4">Type or status</th><th class="px-5 py-4">Visibility</th><th class="px-5 py-4 text-right">Actions</th></tr></thead>
+        <tbody class="divide-y divide-stone-200">
+          {% for item in objects %}
+          <tr class="hover:bg-stone-50">
+            <td class="px-5 py-4"><p class="font-bold text-slate-800">{{ item }}</p>{% if item.updated_at %}<p class="mt-1 text-xs text-slate-500">Updated {{ item.updated_at|date:'d M Y, H:i' }}</p>{% endif %}</td>
+            <td class="px-5 py-4 text-sm text-slate-600">{% if section == 'people' %}{{ item.get_member_type_display }}{% elif section == 'practice-areas' %}Order {{ item.display_order }}{% else %}{{ item.get_status_display }}{% endif %}</td>
+            <td class="px-5 py-4 text-sm">{% if section == 'people' or section == 'practice-areas' %}{% if item.is_active %}<span class="text-emerald-700">Active</span>{% else %}<span class="text-slate-500">Hidden</span>{% endif %}{% else %}{% if item.status == 'published' %}<span class="text-emerald-700">Published</span>{% else %}<span class="text-amber-700">Draft</span>{% endif %}{% endif %}</td>
+            <td class="px-5 py-4"><div class="flex justify-end gap-3">{% if can_change %}<a class="text-link text-sm" href="{% url 'core:staff_content_edit' section item.pk %}">Edit</a>{% endif %}{% if can_delete %}<a class="text-sm font-semibold text-red-700 hover:text-red-900" href="{% url 'core:staff_content_delete' section item.pk %}">Delete</a>{% endif %}</div></td>
+          </tr>
+          {% empty %}<tr><td class="px-5 py-10 text-center text-slate-500" colspan="4">No {{ content_config.title|lower }} have been added yet.</td></tr>{% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+{% endblock %}

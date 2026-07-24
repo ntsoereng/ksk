@@ -1,0 +1,36 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}{% if object %}Edit{% else %}Add{% endif %} {{ content_config.singular }} | Staff portal{% endblock %}
+{% block robots %}noindex, nofollow{% endblock %}
+{% block content %}
+{% include 'core/_staff_nav.html' %}
+<section class="mx-auto max-w-4xl px-6 py-12 sm:px-8">
+  <a class="text-link text-sm" href="{% if is_site_settings %}{% url 'core:staff_dashboard' %}{% else %}{% url 'core:staff_content_list' section %}{% endif %}"><span aria-hidden="true">←</span> Back</a>
+  <div class="mt-6"><p class="eyebrow">Content editor</p><h1 class="mt-2 font-serif text-4xl text-maroon-950">{% if object and not is_site_settings %}Edit {{ content_config.singular }}{% elif is_site_settings %}Site settings{% else %}Add {{ content_config.singular }}{% endif %}</h1></div>
+  {% if section == 'case-studies' %}<div class="mt-6 rounded-xl border border-amber-200 bg-amber-50 p-5 text-sm leading-6 text-amber-900"><strong>Confidentiality check:</strong> remove client names, identifying facts, privileged material and sensitive information unless publication has been expressly approved.</div>{% endif %}
+  <form class="staff-content-form mt-8 space-y-6" method="post" enctype="multipart/form-data" novalidate>
+    {% csrf_token %}
+    {% if form.non_field_errors %}<div class="rounded-lg border border-red-200 bg-red-50 p-4 text-red-800">{{ form.non_field_errors }}</div>{% endif %}
+    <div class="card space-y-6 p-6 sm:p-8">
+      {% for field in form %}
+      <div class="{% if field.field.widget.input_type == 'checkbox' %}flex items-start gap-3{% endif %}">
+        {% if field.field.widget.input_type == 'checkbox' %}
+          <div class="pt-1">{{ field }}</div><div><label class="font-bold text-slate-800" for="{{ field.id_for_label }}">{{ field.label }}</label>{% if field.help_text %}<p class="mt-1 text-sm leading-6 text-slate-500">{{ field.help_text }}</p>{% endif %}</div>
+        {% else %}
+          <label class="mb-2 block text-sm font-bold text-slate-800" for="{{ field.id_for_label }}">{{ field.label }}{% if field.field.required %}<span class="text-red-700"> *</span>{% endif %}</label>
+          {{ field }}
+          {% if field.help_text %}<p class="mt-2 text-sm leading-6 text-slate-500">{{ field.help_text }}</p>{% endif %}
+        {% endif %}
+        {% if field.errors %}<p class="mt-2 text-sm font-semibold text-red-700">{{ field.errors|striptags }}</p>{% endif %}
+      </div>
+      {% endfor %}
+    </div>
+    <div class="flex flex-col-reverse gap-3 sm:flex-row sm:justify-end">
+      <a class="button-secondary" href="{% if is_site_settings %}{% url 'core:staff_dashboard' %}{% else %}{% url 'core:staff_content_list' section %}{% endif %}">Cancel</a>
+      <button class="button-primary" type="submit">Save {{ content_config.singular }}</button>
+    </div>
+  </form>
+</section>
+{{ form.media }}
+<script src="{% static 'js/staff-content-editor.js' %}"></script>
+{% endblock %}

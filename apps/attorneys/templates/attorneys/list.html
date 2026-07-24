@@ -1,16 +1,48 @@
 {% extends 'base.html' %}
 {% load static %}
-{% block title %}Our Attorneys | Khoboko Law Chambers{% endblock %}
+{% block title %}Our people | {{ site_information.firm_name|default:'Khoboko Law Chambers' }}{% endblock %}
+{% block meta_description %}Meet the legal professionals and support staff at {{ site_information.firm_name|default:'Khoboko Law Chambers' }}.{% endblock %}
+{% block og_title %}Our people | {{ site_information.firm_name|default:'Khoboko Law Chambers' }}{% endblock %}
+{% block og_description %}Meet the professionals committed to clear advice, diligent preparation and principled service.{% endblock %}
 {% block content %}
-<section class="border-b border-khaki-200 bg-khaki-100 py-16 sm:py-20"><div class="mx-auto max-w-6xl px-6"><p class="eyebrow">Our people</p><h1 class="page-title">Experienced counsel. Personal attention.</h1><p class="mt-5 max-w-2xl text-lg leading-8 text-slate-700">Meet the professionals committed to clear advice, diligent preparation, and principled representation.</p></div></section>
-<section class="mx-auto max-w-6xl px-6 py-14 sm:py-16">
-  <div class="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-    {% for attorney in attorneys %}
-      <a class="card card-link group overflow-hidden" href="{{ attorney.get_absolute_url }}">
-        {% if attorney.photo %}<img class="aspect-[4/3] w-full object-cover object-top" src="{{ attorney.photo.url }}" alt="Portrait of {{ attorney }}" loading="lazy">{% else %}<img class="aspect-[4/3] w-full object-cover object-top" src="{% static 'images/default-attorney.svg' %}" alt="" loading="lazy">{% endif %}
-        <div class="p-6"><h2 class="font-serif text-2xl text-maroon-900">{{ attorney }}</h2><p class="mt-1 font-semibold text-maroon-700">{{ attorney.title }}</p><p class="mt-4 line-clamp-3 leading-7 text-slate-600">{{ attorney.biography|truncatewords:24 }}</p><span class="mt-5 inline-block text-sm font-bold text-maroon-800">View profile <span aria-hidden="true">→</span></span></div>
-      </a>
-    {% empty %}<div class="card p-8 text-slate-600 sm:col-span-2 lg:col-span-3">Attorney profiles are coming soon.</div>{% endfor %}
+<section class="relative overflow-hidden border-b border-khaki-200 bg-khaki-100 py-20 sm:py-24">
+  <div class="absolute inset-y-0 right-0 w-1/3 bg-[linear-gradient(135deg,transparent_50%,rgba(101,19,35,.06)_50%)]" aria-hidden="true"></div>
+  <div class="relative mx-auto max-w-7xl px-6 sm:px-8">
+    <p class="eyebrow">Our people</p>
+    <h1 class="page-title">{{ site_information.people_page_title|default:'Experienced counsel. Personal attention.' }}</h1>
+    <p class="mt-5 max-w-2xl text-lg leading-8 text-slate-700">{{ site_information.people_page_text|default:'Meet the legal professionals and staff committed to clear advice, diligent preparation and principled service.' }}</p>
   </div>
 </section>
+
+<section class="mx-auto max-w-7xl px-6 py-16 sm:px-8 sm:py-24">
+  <div class="max-w-3xl">
+    <p class="eyebrow">Legal professionals</p>
+    <h2 class="section-title mt-2">Your legal team</h2>
+    <p class="mt-4 leading-7 text-slate-600">{{ site_information.lawyers_section_intro|default:'Our legal professionals lead client matters and provide the firm’s legal advice and representation.' }}</p>
+  </div>
+  <div class="mt-10 grid gap-7 sm:grid-cols-2 lg:grid-cols-3">
+    {% for attorney in lawyers %}
+      {% include 'attorneys/_person_card.html' with person=attorney %}
+    {% empty %}
+      <div class="card p-8 text-slate-600 sm:col-span-2 lg:col-span-3">Legal professional profiles will be published shortly.</div>
+    {% endfor %}
+  </div>
+</section>
+
+{% if staff_members %}
+<section class="border-y border-stone-200 bg-white py-16 sm:py-24">
+  <div class="mx-auto max-w-7xl px-6 sm:px-8">
+    <div class="max-w-3xl">
+      <p class="eyebrow">Professional &amp; support staff</p>
+      <h2 class="section-title mt-2">Supporting every matter</h2>
+      <p class="mt-4 leading-7 text-slate-600">{{ site_information.staff_section_intro|default:'Our professional and support staff help keep communication, administration and client service moving with care.' }}</p>
+    </div>
+    <div class="mt-10 grid gap-7 sm:grid-cols-2 lg:grid-cols-3">
+      {% for attorney in staff_members %}
+        {% include 'attorneys/_person_card.html' with person=attorney %}
+      {% endfor %}
+    </div>
+  </div>
+</section>
+{% endif %}
 {% endblock %}

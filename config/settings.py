@@ -66,6 +66,7 @@ INSTALLED_APPS = [
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
+    'django.contrib.sitemaps',
     'django.contrib.staticfiles',
     'apps.accounts',
     'apps.practice_areas',
@@ -108,30 +109,34 @@ WSGI_APPLICATION = 'config.wsgi.application'
 
 # Database
 # https://docs.djangoproject.com/en/6.0/ref/settings/#databases
-DATABASES = {
-    "default": {
-        "ENGINE": config("DB_ENGINE"),
-        "NAME": config("DB_NAME"),
-        "USER": config("DB_USER"),
-        "PASSWORD": config("DB_PASSWORD"),
-        "HOST": config("DB_HOST", default="127.0.0.1"),
-        "PORT": config("DB_PORT", cast=int, default=3306),
-
-        # Keep database connections open for reuse.
-        "CONN_MAX_AGE": 600,
-
-        # Automatically reconnect stale connections.
-        "CONN_HEALTH_CHECKS": True,
-
-        "OPTIONS": {
-            "charset": "utf8mb4",
-            "init_command": (
-                "SET sql_mode='STRICT_TRANS_TABLES', "
-                "innodb_strict_mode=1"
-            ),
+DB_ENGINE = config('DB_ENGINE', default='django.db.backends.sqlite3')
+if DB_ENGINE == 'django.db.backends.sqlite3':
+    DATABASES = {
+        'default': {
+            'ENGINE': DB_ENGINE,
+            'NAME': config('DB_NAME', default=str(BASE_DIR / 'db.sqlite3')),
         },
     }
-}
+else:
+    DATABASES = {
+        'default': {
+            'ENGINE': DB_ENGINE,
+            'NAME': config('DB_NAME'),
+            'USER': config('DB_USER'),
+            'PASSWORD': config('DB_PASSWORD'),
+            'HOST': config('DB_HOST', default='127.0.0.1'),
+            'PORT': config('DB_PORT', cast=int, default=3306),
+            'CONN_MAX_AGE': 600,
+            'CONN_HEALTH_CHECKS': True,
+            'OPTIONS': {
+                'charset': 'utf8mb4',
+                'init_command': (
+                    "SET sql_mode='STRICT_TRANS_TABLES', "
+                    'innodb_strict_mode=1'
+                ),
+            },
+        },
+    }
 
 # Password validation
 # https://docs.djangoproject.com/en/6.0/ref/settings/#auth-password-validators
@@ -171,7 +176,7 @@ STATIC_URL = '/static/'
 STATICFILES_DIRS = [BASE_DIR / 'static']
 # STATIC_ROOT = BASE_DIR / 'staticfiles'
 
-STATIC_ROOT = '/home/khobokol/public_html/static'
+STATIC_ROOT = Path(config('STATIC_ROOT', default=str(BASE_DIR / 'staticfiles')))
 
 # Hash filenames in production so browsers receive updated assets after deploys.
 STORAGES = {
@@ -179,12 +184,18 @@ STORAGES = {
         'BACKEND': 'django.core.files.storage.FileSystemStorage',
     },
     'staticfiles': {
-        'BACKEND': 'whitenoise.storage.CompressedManifestStaticFilesStorage',
+        'BACKEND': (
+            'django.contrib.staticfiles.storage.StaticFilesStorage'
+            if DEBUG
+            else 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+        ),
     },
 }
 
-MEDIA_URL = '/media/'
-MEDIA_ROOT = Path("/home/khobokol/media")
+MEDIA_URL = config('MEDIA_URL', default='/media/')
+# Keep uploads inside the project while developing. Production can point this
+# at a persistent volume without changing application code.
+MEDIA_ROOT = Path(config('MEDIA_ROOT', default=str(BASE_DIR / 'media')))
 
 AUTH_USER_MODEL = 'accounts.User'
 LOGIN_URL = 'admin:login'

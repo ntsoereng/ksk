@@ -4,7 +4,8 @@
 @source "../../apps/**/*.html";
 
 @theme {
-  --font-serif: Georgia, Cambria, "Times New Roman", serif;
+  --font-sans: "Avenir Next", Avenir, "Segoe UI", "Helvetica Neue", Arial, sans-serif;
+  --font-serif: Baskerville, "Iowan Old Style", "Palatino Linotype", Palatino, Georgia, serif;
   --color-maroon-950: #31060d;
   --color-maroon-900: #4b0d18;
   --color-maroon-800: #651323;
@@ -19,6 +20,9 @@
   --color-khaki-600: #927442;
   --color-khaki-700: #765c34;
   --color-khaki-800: #5b482c;
+  --color-ivory-50: #fbfaf7;
+  --color-ink-800: #23272d;
+  --color-gold-200: #e5d8b6;
 }
 
 @layer base {
@@ -28,7 +32,13 @@
   }
 
   body {
-    @apply min-h-screen;
+    @apply min-h-screen font-sans;
+    font-feature-settings: "kern" 1, "liga" 1;
+  }
+
+  h1, h2, h3, .font-serif {
+    font-family: var(--font-serif);
+    letter-spacing: -0.015em;
   }
 
   a, button, summary, input, textarea {
@@ -70,4 +80,19 @@
   .article-content ol { @apply mt-5 list-decimal space-y-2 pl-6; }
   .article-content blockquote { @apply mt-6 border-l-4 border-khaki-400 pl-5 font-serif text-xl text-maroon-900; }
   .article-content a { @apply text-maroon-800 underline decoration-khaki-400 underline-offset-4; }
+  .rich-text-widget { @apply overflow-hidden rounded-lg border border-stone-300 bg-white shadow-sm; }
+  .rich-text-toolbar { @apply flex flex-wrap gap-1 border-b border-stone-200 bg-khaki-50 p-2; }
+  .rich-text-toolbar button { @apply min-h-9 rounded-md border border-transparent px-3 py-1.5 text-sm font-bold text-slate-700 transition hover:border-khaki-300 hover:bg-white hover:text-maroon-800; }
+  .rich-text-editor { @apply min-h-64 px-4 py-4 leading-7 text-slate-800 outline-none focus:ring-2 focus:ring-inset focus:ring-khaki-300; }
+  .rich-text-editor h2 { @apply my-4 font-serif text-2xl text-maroon-900; }
+  .rich-text-editor h3 { @apply my-3 font-serif text-xl text-maroon-900; }
+  .rich-text-editor p { @apply my-3; }
+  .rich-text-editor ul { @apply my-3 list-disc pl-6; }
+  .rich-text-editor ol { @apply my-3 list-decimal pl-6; }
+  .rich-text-editor blockquote { @apply my-4 border-l-4 border-khaki-400 pl-4 font-serif text-lg; }
+  .staff-content-form select { @apply w-full rounded-lg border border-stone-300 bg-white px-4 py-3 text-slate-900 shadow-sm; }
+  .staff-content-form input[type="file"] { @apply w-full rounded-lg border border-dashed border-stone-300 bg-stone-50 p-4 text-sm; }
+  .staff-content-form input[type="checkbox"] { @apply h-5 w-5 rounded border-stone-300 text-maroon-800 accent-maroon-800; }
+  .staff-content-form ul:has(input[type="checkbox"]) { @apply grid gap-2 rounded-lg border border-stone-200 bg-stone-50 p-4 sm:grid-cols-2; }
+  .staff-content-form ul:has(input[type="checkbox"]) label { @apply flex items-center gap-2 text-sm text-slate-700; }
 }

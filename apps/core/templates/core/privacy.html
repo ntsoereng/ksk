@@ -4,10 +4,14 @@
 <article class="mx-auto max-w-3xl px-6 py-14 sm:py-20">
   <p class="eyebrow">Legal information</p>
   <h1 class="page-title">Privacy policy</h1>
+  {% if site_information.privacy_policy %}
+  <div class="mt-10 whitespace-pre-line leading-8 text-slate-700">{{ site_information.privacy_policy }}</div>
+  {% else %}
   <div class="mt-10 space-y-10 leading-8 text-slate-700">
     <section><h2 class="font-serif text-2xl text-maroon-900">Information we collect</h2><p class="mt-2">We collect the information you provide through our contact form, including your name, contact details, and message, so that we can respond to your enquiry.</p></section>
     <section><h2 class="font-serif text-2xl text-maroon-900">How we use it</h2><p class="mt-2">We use your information to communicate with you and to operate and improve this website. We do not sell your personal information.</p></section>
     <section><h2 class="font-serif text-2xl text-maroon-900">Contact</h2><p class="mt-2">For privacy questions, contact us{% if site_information.primary_email %} at <a class="text-link" href="mailto:{{ site_information.primary_email }}">{{ site_information.primary_email }}</a>{% endif %}.</p></section>
   </div>
+  {% endif %}
 </article>
 {% endblock %}

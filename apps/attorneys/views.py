@@ -7,6 +7,13 @@ class AttorneyListView(ListView):
     template_name = 'attorneys/list.html'
     context_object_name = 'attorneys'
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        people = context['attorneys']
+        context['lawyers'] = [person for person in people if person.is_lawyer]
+        context['staff_members'] = [person for person in people if not person.is_lawyer]
+        return context
+
 
 class AttorneyDetailView(DetailView):
     queryset = Attorney.objects.filter(is_active=True).select_related('user').prefetch_related('practice_areas')

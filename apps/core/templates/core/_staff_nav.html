@@ -1,0 +1,11 @@
+<nav class="border-b border-stone-200 bg-white" aria-label="Staff content">
+  <div class="mx-auto flex max-w-7xl gap-1 overflow-x-auto px-4 py-3 sm:px-8">
+    <a class="whitespace-nowrap rounded-lg px-3 py-2 text-sm font-bold {% if request.resolver_match.url_name == 'staff_dashboard' %}bg-maroon-800 text-white{% else %}text-slate-700 hover:bg-khaki-50{% endif %}" href="{% url 'core:staff_dashboard' %}">Dashboard</a>
+    {% if perms.articles.view_article %}<a class="whitespace-nowrap rounded-lg px-3 py-2 text-sm font-bold text-slate-700 hover:bg-khaki-50" href="{% url 'core:staff_content_list' 'posts' %}">Posts</a>{% endif %}
+    {% if perms.practice_areas.view_practicearea %}<a class="whitespace-nowrap rounded-lg px-3 py-2 text-sm font-bold text-slate-700 hover:bg-khaki-50" href="{% url 'core:staff_content_list' 'practice-areas' %}">Practice areas</a>{% endif %}
+    {% if perms.core.view_casestudy %}<a class="whitespace-nowrap rounded-lg px-3 py-2 text-sm font-bold text-slate-700 hover:bg-khaki-50" href="{% url 'core:staff_content_list' 'case-studies' %}">Case studies</a>{% endif %}
+    {% if perms.attorneys.view_attorney %}<a class="whitespace-nowrap rounded-lg px-3 py-2 text-sm font-bold text-slate-700 hover:bg-khaki-50" href="{% url 'core:staff_content_list' 'people' %}">People</a>{% endif %}
+    {% if perms.core.view_inquiry %}<a class="whitespace-nowrap rounded-lg px-3 py-2 text-sm font-bold text-slate-700 hover:bg-khaki-50" href="{% url 'core:staff_messages' %}">Messages</a>{% endif %}
+    {% if perms.core.change_siteinformation %}<a class="whitespace-nowrap rounded-lg px-3 py-2 text-sm font-bold text-slate-700 hover:bg-khaki-50" href="{% url 'core:staff_site_settings' %}">Site settings</a>{% endif %}
+  </div>
+</nav>

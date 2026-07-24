@@ -1,0 +1,22 @@
+{% extends 'base.html' %}
+{% block title %}Messages | Staff portal{% endblock %}
+{% block robots %}noindex, nofollow{% endblock %}
+{% block content %}
+{% include 'core/_staff_nav.html' %}
+<section class="mx-auto max-w-6xl px-6 py-12 sm:px-8">
+  <div><p class="eyebrow">Contact enquiries</p><h1 class="mt-2 font-serif text-4xl text-maroon-950">Messages</h1><p class="mt-3 text-slate-600">{{ unread_count }} unread message{{ unread_count|pluralize }}</p></div>
+  <div class="mt-8 overflow-hidden rounded-xl border border-khaki-200 bg-white shadow-sm">
+    <div class="divide-y divide-stone-200">
+      {% for inquiry in inquiries %}
+      <a class="block px-6 py-5 transition hover:bg-khaki-50" href="{% url 'core:staff_message_detail' inquiry.pk %}">
+        <div class="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
+          <div><div class="flex items-center gap-3"><h2 class="font-bold text-slate-800">{{ inquiry.subject }}</h2>{% if not inquiry.is_read %}<span class="rounded-full bg-khaki-100 px-2.5 py-1 text-xs font-bold text-maroon-800">New</span>{% endif %}</div><p class="mt-1 text-sm text-slate-600">{{ inquiry.name }} · {{ inquiry.email }}</p></div>
+          <time class="text-xs text-slate-500" datetime="{{ inquiry.created_at|date:'c' }}">{{ inquiry.created_at|date:'d M Y, H:i' }}</time>
+        </div>
+        <p class="mt-3 line-clamp-2 text-sm leading-6 text-slate-500">{{ inquiry.message }}</p>
+      </a>
+      {% empty %}<p class="px-6 py-12 text-center text-slate-500">No messages have been received.</p>{% endfor %}
+    </div>
+  </div>
+</section>
+{% endblock %}
