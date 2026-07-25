@@ -15,14 +15,9 @@
   <meta property="og:url" content="{{ canonical_url }}">
   {% if site_information.social_image %}<meta property="og:image" content="{{ site_information.social_image_absolute_url }}">{% endif %}
   <meta name="twitter:card" content="{% if site_information.social_image %}summary_large_image{% else %}summary{% endif %}">
-  {% if site_information.favicon %}
-    <link rel="icon" href="{{ site_information.favicon.url }}?v={{ site_information.updated_at|date:'U' }}">
-    <link rel="shortcut icon" href="{{ site_information.favicon.url }}?v={{ site_information.updated_at|date:'U' }}">
-    <link rel="apple-touch-icon" href="{{ site_information.favicon.url }}?v={{ site_information.updated_at|date:'U' }}">
-  {% else %}
-    <link rel="icon" href="{% static 'images/branding/favicon.svg' %}" type="image/svg+xml" sizes="any">
-    <link rel="shortcut icon" href="{% url 'favicon' %}">
-  {% endif %}
+  <link rel="icon" href="{% url 'favicon' %}?v={{ site_information.updated_at|date:'U' }}" sizes="any">
+  <link rel="shortcut icon" href="{% url 'favicon' %}?v={{ site_information.updated_at|date:'U' }}">
+  {% if site_information.favicon %}<link rel="apple-touch-icon" href="{% url 'favicon' %}?v={{ site_information.updated_at|date:'U' }}">{% endif %}
   <script type="application/ld+json">
     {
       "@context": "https://schema.org",

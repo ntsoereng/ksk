@@ -2,13 +2,15 @@ from django.contrib import messages
 from django.contrib.admin.views.decorators import staff_member_required
 from django.contrib.auth import logout
 from django.contrib.auth.views import LoginView
-from django.core.exceptions import PermissionDenied
+from django.core.exceptions import PermissionDenied, SuspiciousFileOperation
+from django.core.files.storage import default_storage
 from django.db import transaction
 from django.shortcuts import redirect, render
-from django.http import HttpResponse
+from django.http import FileResponse, Http404, HttpResponse
 from django.urls import reverse
 from django.shortcuts import get_object_or_404
-from django.templatetags.static import static
+from django.contrib.staticfiles import finders
+import mimetypes
 from django.views.decorators.http import require_http_methods
 
 from apps.attorneys.models import Attorney
@@ -285,13 +287,35 @@ def robots_txt(request):
 
 
 def favicon(request):
-    """Support browsers and crawlers that request /favicon.ico directly."""
+    """Stream the favicon without depending on media/static URL mappings."""
     information = SiteInformation.get_solo()
-    target = (
-        information.favicon.url
-        if information and information.favicon
-        else static('images/branding/favicon.svg')
-    )
-    response = redirect(target)
-    response['Cache-Control'] = 'public, max-age=3600'
+    if information and information.favicon:
+        try:
+            filename = information.favicon.name
+            file_handle = information.favicon.open('rb')
+        except (FileNotFoundError, OSError):
+            raise Http404('Configured favicon file was not found.')
+    else:
+        filename = finders.find('images/branding/favicon.svg')
+        if not filename:
+            raise Http404('Fallback favicon was not found.')
+        file_handle = open(filename, 'rb')
+    content_type = mimetypes.guess_type(str(filename))[0] or 'image/x-icon'
+    response = FileResponse(file_handle, content_type=content_type)
+    response['Cache-Control'] = 'public, max-age=3600, must-revalidate'
+    return response
+
+
+def media_file(request, path):
+    """Stream a stored upload when Apache/Passenger forwards /media to Django."""
+    try:
+        if not default_storage.exists(path):
+            raise Http404('Media file was not found.')
+        file_handle = default_storage.open(path, 'rb')
+    except (FileNotFoundError, OSError, SuspiciousFileOperation):
+        raise Http404('Media file was not found.')
+    content_type = mimetypes.guess_type(path)[0] or 'application/octet-stream'
+    response = FileResponse(file_handle, content_type=content_type)
+    response['Cache-Control'] = 'public, max-age=86400'
+    response['X-Content-Type-Options'] = 'nosniff'
     return response

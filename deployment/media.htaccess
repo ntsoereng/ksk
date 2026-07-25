@@ -1,0 +1,13 @@
+Options -Indexes -ExecCGI
+
+# Uploaded files are static data and must never execute on Apache/cPanel.
+RemoveHandler .php .php3 .php4 .php5 .php7 .php8 .phtml .phar .cgi .pl .py .sh
+RemoveType .php .php3 .php4 .php5 .php7 .php8 .phtml .phar .cgi .pl .py .sh
+
+<FilesMatch "\.(php[0-9]?|phtml|phar|cgi|pl|py|sh|htaccess)$">
+    Require all denied
+</FilesMatch>
+
+<IfModule mod_headers.c>
+    Header set X-Content-Type-Options "nosniff"
+</IfModule>

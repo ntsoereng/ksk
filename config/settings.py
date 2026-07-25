@@ -176,12 +176,22 @@ STATIC_URL = '/static/'
 STATICFILES_DIRS = [BASE_DIR / 'static']
 # STATIC_ROOT = BASE_DIR / 'staticfiles'
 
-STATIC_ROOT = Path(config('STATIC_ROOT', default=str(BASE_DIR / 'staticfiles')))
+STATIC_ROOT = Path(
+    config('STATIC_ROOT', default=str(BASE_DIR / 'staticfiles'))
+).expanduser()
+if not STATIC_ROOT.is_absolute():
+    STATIC_ROOT = BASE_DIR / STATIC_ROOT
+
+WHITENOISE_USE_FINDERS = config(
+    'WHITENOISE_USE_FINDERS', default=True, cast=env_bool,
+)
+WHITENOISE_MAX_AGE = 31536000 if not DEBUG else 0
+WHITENOISE_KEEP_ONLY_HASHED_FILES = not DEBUG
 
 # Hash filenames in production so browsers receive updated assets after deploys.
 STORAGES = {
     'default': {
-        'BACKEND': 'django.core.files.storage.FileSystemStorage',
+        'BACKEND': 'apps.core.storage.SafeMediaStorage',
     },
     'staticfiles': {
         'BACKEND': (
@@ -195,7 +205,52 @@ STORAGES = {
 MEDIA_URL = config('MEDIA_URL', default='/media/')
 # Keep uploads inside the project while developing. Production can point this
 # at a persistent volume without changing application code.
-MEDIA_ROOT = Path(config('MEDIA_ROOT', default=str(BASE_DIR / 'media')))
+MEDIA_ROOT = Path(
+    config('MEDIA_ROOT', default=str(BASE_DIR / 'media'))
+).expanduser()
+if not MEDIA_ROOT.is_absolute():
+    MEDIA_ROOT = BASE_DIR / MEDIA_ROOT
+# Serve uploaded assets through Django when the hosting platform does not map
+# MEDIA_ROOT itself. High-traffic deployments can disable this and let their
+# reverse proxy or object storage serve MEDIA_URL instead.
+SERVE_MEDIA = config(
+    'DJANGO_SERVE_MEDIA',
+    default=config('SERVE_MEDIA', default=True, cast=env_bool),
+    cast=env_bool,
+)
+
+FILE_UPLOAD_PERMISSIONS = 0o644
+FILE_UPLOAD_DIRECTORY_PERMISSIONS = 0o755
+DATA_UPLOAD_MAX_MEMORY_SIZE = 10 * 1024 * 1024
+FILE_UPLOAD_MAX_MEMORY_SIZE = 10 * 1024 * 1024
+
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'formatters': {
+        'production': {
+            'format': '{levelname} {asctime} {name}: {message}',
+            'style': '{',
+        },
+    },
+    'handlers': {
+        'console': {
+            'class': 'logging.StreamHandler',
+            'formatter': 'production',
+        },
+    },
+    'root': {
+        'handlers': ['console'],
+        'level': config('DJANGO_LOG_LEVEL', default='INFO'),
+    },
+    'loggers': {
+        'django.request': {
+            'handlers': ['console'],
+            'level': 'ERROR',
+            'propagate': False,
+        },
+    },
+}
 
 AUTH_USER_MODEL = 'accounts.User'
 LOGIN_URL = 'admin:login'

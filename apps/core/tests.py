@@ -1,7 +1,9 @@
 from django.test import TestCase, override_settings
-from django.urls import reverse
+from django.urls import resolve, reverse
 from django.contrib.auth import get_user_model
 from django.utils import timezone
+from io import BytesIO
+from unittest.mock import patch
 
 from apps.articles.models import Article
 from apps.attorneys.models import Attorney
@@ -15,7 +17,7 @@ class SeoTests(TestCase):
         response = self.client.get(reverse('core:home'))
 
         self.assertContains(response, '<link rel="canonical"', html=False)
-        self.assertContains(response, 'favicon.svg')
+        self.assertContains(response, '/favicon.ico')
         self.assertContains(response, 'application/ld+json')
 
     def test_editable_seo_metadata_is_rendered(self):
@@ -45,15 +47,37 @@ class SeoTests(TestCase):
         self.assertEqual(response['Content-Type'], 'application/xml')
         self.assertContains(response, '<loc>http://testserver/</loc>')
 
-    def test_root_favicon_url_redirects_to_fallback_asset(self):
+    def test_root_favicon_url_streams_fallback_asset(self):
         response = self.client.get(reverse('favicon'))
 
-        self.assertRedirects(
-            response,
-            '/static/images/branding/favicon.svg',
-            fetch_redirect_response=False,
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response['Content-Type'], 'image/svg+xml')
+        self.assertTrue(b''.join(response.streaming_content).startswith(b'<svg'))
+        self.assertEqual(
+            response['Cache-Control'],
+            'public, max-age=3600, must-revalidate',
         )
-        self.assertEqual(response['Cache-Control'], 'public, max-age=3600')
+
+    def test_media_url_is_routed_when_django_serves_uploads(self):
+        match = resolve('/media/attorneys/example.png')
+
+        self.assertEqual(match.url_name, 'media')
+        self.assertEqual(match.kwargs['path'], 'attorneys/example.png')
+
+    @patch('apps.core.views.default_storage')
+    def test_media_fallback_streams_from_configured_storage(self, storage):
+        storage.exists.return_value = True
+        storage.open.return_value = BytesIO(b'example-image-bytes')
+
+        response = self.client.get('/media/attorneys/example.png')
+
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response['Content-Type'], 'image/png')
+        self.assertEqual(
+            b''.join(response.streaming_content),
+            b'example-image-bytes',
+        )
+        storage.open.assert_called_once_with('attorneys/example.png', 'rb')
 
 
 class StaffDashboardTests(TestCase):

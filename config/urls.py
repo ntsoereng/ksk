@@ -18,9 +18,9 @@ from django.contrib import admin
 from django.conf import settings
 from django.conf.urls.static import static
 from django.contrib.sitemaps.views import sitemap
-from django.urls import include, path
+from django.urls import include, path, re_path
 from apps.core.sitemaps import sitemaps
-from apps.core.views import favicon, robots_txt
+from apps.core.views import favicon, media_file, robots_txt
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -33,5 +33,14 @@ urlpatterns = [
     path('favicon.ico', favicon, name='favicon'),
 ]
 
-if settings.DEBUG:
+if settings.SERVE_MEDIA:
+    media_prefix = settings.MEDIA_URL.lstrip('/').rstrip('/')
+    urlpatterns += [
+        re_path(
+            rf'^{media_prefix}/(?P<path>.*)$',
+            media_file,
+            name='media',
+        ),
+    ]
+elif settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

@@ -81,7 +81,7 @@ Staff can also use the branded portal at `/staff/`; a discreet sign-in link appe
 - Review incoming **Consultation inquiries**.
 - Create **Articles** as drafts, add rich content with the editor toolbar, and set the status to Published when ready. Articles without a featured image use the branded default artwork.
 
-Uploaded files are stored in the project `media/` directory and served by Django while `DEBUG=true`. Set `MEDIA_ROOT` to persistent storage in production; the path is no longer tied to a particular server account.
+Uploaded files are stored in the project `media/` directory by default. Set `MEDIA_ROOT` to persistent storage in production. `DJANGO_SERVE_MEDIA=true` lets Django deliver uploads when the hosting platform does not map `/media/`; high-traffic deployments should set it to false after configuring Nginx, Apache, or object storage to serve that directory.
 
 ## Frontend commands
 
@@ -97,6 +97,8 @@ npm run watch  # Rebuild CSS while editing templates
 - Configure the production hostname in `ALLOWED_HOSTS`.
 - Run `python manage.py migrate` and `python manage.py collectstatic`.
 - Configure persistent storage for media uploads (logos, attorney images, and article images).
+- If retaining uploads from the original server layout, set `MEDIA_ROOT=/home/khobokol/media`. Otherwise set it to the absolute persistent directory where the deployed application writes uploads.
+- On Apache/cPanel, copy `deployment/media.htaccess` to `MEDIA_ROOT/.htaccess` so uploads can be served but never executed.
 - Use HTTPS and set the relevant Django security settings at the deployment layer.
 - Keep `.env`, `media/`, `node_modules/`, and private keys out of version control; `.gitignore` is configured for this.
 
