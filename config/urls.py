@@ -20,7 +20,7 @@ from django.conf.urls.static import static
 from django.contrib.sitemaps.views import sitemap
 from django.urls import include, path
 from apps.core.sitemaps import sitemaps
-from apps.core.views import robots_txt
+from apps.core.views import favicon, robots_txt
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -30,6 +30,7 @@ urlpatterns = [
     path('articles/', include('apps.articles.urls')),
     path('sitemap.xml', sitemap, {'sitemaps': sitemaps}, name='sitemap'),
     path('robots.txt', robots_txt, name='robots'),
+    path('favicon.ico', favicon, name='favicon'),
 ]
 
 if settings.DEBUG:

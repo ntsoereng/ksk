@@ -8,6 +8,7 @@ from django.shortcuts import redirect, render
 from django.http import HttpResponse
 from django.urls import reverse
 from django.shortcuts import get_object_or_404
+from django.templatetags.static import static
 from django.views.decorators.http import require_http_methods
 
 from apps.attorneys.models import Attorney
@@ -281,3 +282,16 @@ def robots_txt(request):
     sitemap_url = request.build_absolute_uri(reverse('sitemap'))
     content = f'User-agent: *\nAllow: /\nDisallow: /admin/\n\nSitemap: {sitemap_url}\n'
     return HttpResponse(content, content_type='text/plain')
+
+
+def favicon(request):
+    """Support browsers and crawlers that request /favicon.ico directly."""
+    information = SiteInformation.get_solo()
+    target = (
+        information.favicon.url
+        if information and information.favicon
+        else static('images/branding/favicon.svg')
+    )
+    response = redirect(target)
+    response['Cache-Control'] = 'public, max-age=3600'
+    return response

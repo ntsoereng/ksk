@@ -45,6 +45,16 @@ class SeoTests(TestCase):
         self.assertEqual(response['Content-Type'], 'application/xml')
         self.assertContains(response, '<loc>http://testserver/</loc>')
 
+    def test_root_favicon_url_redirects_to_fallback_asset(self):
+        response = self.client.get(reverse('favicon'))
+
+        self.assertRedirects(
+            response,
+            '/static/images/branding/favicon.svg',
+            fetch_redirect_response=False,
+        )
+        self.assertEqual(response['Cache-Control'], 'public, max-age=3600')
+
 
 class StaffDashboardTests(TestCase):
     def test_dashboard_requires_staff_login(self):
