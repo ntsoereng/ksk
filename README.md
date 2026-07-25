@@ -92,9 +92,16 @@ npm run watch  # Rebuild CSS while editing templates
 
 ## Production checklist
 
+- Deploy with Python 3.12 or newer and install the pinned dependencies from `requirements.txt`.
 - Set `DEBUG=false` and use a unique production `SECRET_KEY`. The security-cookie, HTTPS redirect, and HSTS settings automatically become secure defaults; configure HTTPS at the proxy or web server before deployment.
 - Configure the production hostname in `ALLOWED_HOSTS`.
 - Run `python manage.py migrate` and `python manage.py collectstatic`.
 - Configure persistent storage for media uploads (logos, attorney images, and article images).
 - Use HTTPS and set the relevant Django security settings at the deployment layer.
 - Keep `.env`, `media/`, `node_modules/`, and private keys out of version control; `.gitignore` is configured for this.
+
+Run the WSGI application with:
+
+```bash
+gunicorn config.wsgi:application --bind 0.0.0.0:${PORT:-8000}
+```

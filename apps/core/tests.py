@@ -1,8 +1,11 @@
 from django.test import TestCase, override_settings
 from django.urls import reverse
 from django.contrib.auth import get_user_model
+from django.utils import timezone
 
 from apps.articles.models import Article
+from apps.attorneys.models import Attorney
+from apps.practice_areas.models import PracticeArea
 
 from .models import Inquiry, SiteInformation
 
@@ -144,6 +147,47 @@ class StaffDashboardTests(TestCase):
         inquiry.refresh_from_db()
         self.assertTrue(inquiry.is_read)
 
+    def test_staff_creates_person_without_selecting_internal_user(self):
+        staff = get_user_model().objects.create_superuser(
+            email='people-editor@example.com',
+            password='safe-test-password',
+        )
+        self.client.force_login(staff)
+
+        editor = self.client.get(
+            reverse('core:staff_content_add', args=('people',)),
+        )
+        self.assertNotContains(editor, 'name="user"')
+        self.assertContains(editor, 'name="first_name"')
+        self.assertContains(editor, 'name="person_email"')
+
+        response = self.client.post(
+            reverse('core:staff_content_add', args=('people',)),
+            {
+                'first_name': 'Lerato',
+                'last_name': 'Mokoena',
+                'person_email': 'lerato@example.com',
+                'title': 'Associate',
+                'member_type': Attorney.MemberType.LAWYER,
+                'slug': 'lerato-mokoena',
+                'biography': '<p>Legal professional biography.</p>',
+                'display_order': 1,
+                'is_active': 'on',
+            },
+        )
+
+        self.assertRedirects(
+            response,
+            reverse('core:staff_content_list', args=('people',)),
+        )
+        profile = Attorney.objects.select_related('user').get(
+            slug='lerato-mokoena',
+        )
+        self.assertEqual(profile.user.first_name, 'Lerato')
+        self.assertEqual(profile.user.last_name, 'Mokoena')
+        self.assertFalse(profile.user.has_usable_password())
+        self.assertFalse(profile.user.is_staff)
+
 
 class ErrorPageTests(TestCase):
     @override_settings(DEBUG=False)
@@ -154,5 +198,45 @@ class ErrorPageTests(TestCase):
         self.assertContains(response, 'This page could not be found.', status_code=404)
         self.assertContains(response, 'noindex, nofollow', status_code=404)
         self.assertContains(response, reverse('core:contact'), status_code=404)
+
+
+class DetailPageDesignTests(TestCase):
+    def test_article_practice_area_and_person_details_render(self):
+        article = Article.objects.create(
+            title='Legal update',
+            slug='legal-update',
+            excerpt='A concise legal update.',
+            content='<p>Useful information.</p>',
+            status=Article.Status.PUBLISHED,
+            published_at=timezone.now(),
+        )
+        area = PracticeArea.objects.create(
+            name='Commercial law',
+            slug='commercial-law',
+            short_description='Commercial guidance for growing organisations.',
+            description='<p>Commercial law overview.</p>',
+        )
+        user = get_user_model().objects.create_user(
+            email='lawyer@example.com',
+            first_name='Lerato',
+            last_name='Mokoena',
+        )
+        person = Attorney.objects.create(
+            user=user,
+            title='Associate',
+            slug='lerato-mokoena',
+            biography='<p>Experienced legal professional.</p>',
+        )
+        person.practice_areas.add(area)
+
+        article_response = self.client.get(article.get_absolute_url())
+        area_response = self.client.get(area.get_absolute_url())
+        person_response = self.client.get(person.get_absolute_url())
+
+        self.assertContains(article_response, 'Important note')
+        self.assertContains(area_response, 'Discuss your matter')
+        self.assertContains(area_response, 'People in this area')
+        self.assertContains(person_response, 'Areas of focus')
+        self.assertContains(person_response, 'Meet more of our people', count=0)
 
 # Create your tests here.

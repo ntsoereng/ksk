@@ -17,3 +17,10 @@ class ArticleDetailView(DetailView):
 
     def get_queryset(self):
         return Article.objects.filter(status=Article.Status.PUBLISHED, published_at__lte=timezone.now()).select_related('author')
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['related_articles'] = self.get_queryset().exclude(
+            pk=self.object.pk,
+        )[:3]
+        return context

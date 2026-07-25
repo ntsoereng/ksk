@@ -12,3 +12,14 @@ class PracticeAreaDetailView(DetailView):
     queryset = PracticeArea.objects.filter(is_active=True)
     template_name = 'practice_areas/detail.html'
     context_object_name = 'practice_area'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['area_people'] = self.object.attorneys.filter(
+            is_active=True,
+            member_type='lawyer',
+        ).select_related('user')[:4]
+        context['other_areas'] = PracticeArea.objects.filter(
+            is_active=True,
+        ).exclude(pk=self.object.pk)[:4]
+        return context

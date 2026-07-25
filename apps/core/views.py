@@ -3,6 +3,7 @@ from django.contrib.admin.views.decorators import staff_member_required
 from django.contrib.auth import logout
 from django.contrib.auth.views import LoginView
 from django.core.exceptions import PermissionDenied
+from django.db import transaction
 from django.shortcuts import redirect, render
 from django.http import HttpResponse
 from django.urls import reverse
@@ -186,11 +187,12 @@ def staff_content_edit(request, section, pk=None):
         instance=instance,
     )
     if request.method == 'POST' and form.is_valid():
-        obj = form.save(commit=False)
-        if section == 'posts' and obj.author_id is None:
-            obj.author = request.user
-        obj.save()
-        form.save_m2m()
+        with transaction.atomic():
+            obj = form.save(commit=False)
+            if section == 'posts' and obj.author_id is None:
+                obj.author = request.user
+            obj.save()
+            form.save_m2m()
         messages.success(
             request,
             f"{config['singular'].capitalize()} saved successfully.",

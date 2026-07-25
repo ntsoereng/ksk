@@ -1,11 +1,48 @@
 {% extends 'base.html' %}
+{% load static %}
 {% block title %}{{ practice_area.name }} | {{ site_information.firm_name|default:'Khoboko Law Chambers' }}{% endblock %}
 {% block meta_description %}{{ practice_area.short_description }}{% endblock %}
 {% block og_title %}{{ practice_area.name }} | {{ site_information.firm_name|default:'Khoboko Law Chambers' }}{% endblock %}
 {% block og_description %}{{ practice_area.short_description }}{% endblock %}
 {% block content %}
 <article>
-  <header class="border-b border-khaki-200 bg-khaki-100 py-14 sm:py-20"><div class="mx-auto max-w-4xl px-6"><a class="text-link text-sm" href="{% url 'practice_areas:list' %}"><span aria-hidden="true">←</span> All practice areas</a><p class="eyebrow mt-8">How we help</p><h1 class="page-title">{{ practice_area.name }}</h1></div></header>
-  <div class="mx-auto grid max-w-5xl gap-10 px-6 py-12 sm:py-16 lg:grid-cols-[1fr_280px]"><div class="article-content text-lg leading-8 text-slate-700">{{ practice_area.description|safe }}</div><aside class="h-fit rounded-xl bg-maroon-950 p-7 text-white lg:sticky lg:top-28"><h2 class="font-serif text-2xl">Discuss your matter</h2><p class="mt-3 leading-7 text-khaki-100">Contact our team for guidance tailored to your circumstances.</p><a class="mt-6 inline-flex min-h-11 w-full items-center justify-center rounded-lg bg-khaki-400 px-5 py-3 text-sm font-bold text-maroon-950 transition hover:bg-khaki-300" href="{% url 'core:contact' %}">Start a conversation</a></aside></div>
+  <header class="relative isolate overflow-hidden bg-maroon-950 text-white">
+    <div class="absolute -right-32 top-1/2 -z-10 h-[34rem] w-[34rem] -translate-y-1/2 rounded-full border border-khaki-300/15" aria-hidden="true"></div>
+    <div class="absolute -right-10 top-1/2 -z-10 h-80 w-80 -translate-y-1/2 rounded-full border border-khaki-300/15" aria-hidden="true"></div>
+    <div class="mx-auto max-w-7xl px-6 py-14 sm:px-8 sm:py-20">
+      <nav class="flex items-center gap-2 text-sm text-khaki-200" aria-label="Breadcrumb"><a class="font-semibold hover:text-white" href="{% url 'core:home' %}">Home</a><span aria-hidden="true">/</span><a class="font-semibold hover:text-white" href="{% url 'practice_areas:list' %}">Practice areas</a><span aria-hidden="true">/</span><span aria-current="page">{{ practice_area.name }}</span></nav>
+      <div class="mt-12 max-w-4xl">
+        <p class="text-xs font-bold uppercase tracking-[0.22em] text-khaki-300">How we help</p>
+        <h1 class="mt-4 font-serif text-5xl leading-tight sm:text-6xl">{{ practice_area.name }}</h1>
+        <p class="mt-6 max-w-3xl text-xl leading-8 text-khaki-100">{{ practice_area.short_description }}</p>
+      </div>
+    </div>
+  </header>
+
+  <div class="mx-auto grid max-w-7xl gap-12 px-6 py-14 sm:px-8 sm:py-20 lg:grid-cols-[minmax(0,760px)_320px] lg:justify-between lg:items-start">
+    <div>
+      <p class="eyebrow">Overview</p>
+      <div class="article-content mt-5 text-lg leading-8 text-slate-700">{{ practice_area.description|safe }}</div>
+    </div>
+    <aside class="space-y-6 lg:sticky lg:top-32">
+      <div class="rounded-2xl bg-khaki-100 p-7">
+        <span class="flex h-11 w-11 items-center justify-center rounded-full bg-white text-maroon-800" aria-hidden="true"><svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 3v18M5 7h14M7 7l-4 7h8L7 7Zm10 0-4 7h8l-4-7ZM7 21h10"/></svg></span>
+        <h2 class="mt-5 font-serif text-2xl text-maroon-950">Discuss your matter</h2>
+        <p class="mt-3 leading-7 text-slate-600">Every matter turns on its own facts. Contact us for guidance shaped around your circumstances.</p>
+        <a class="button-primary mt-6 w-full" href="{% url 'core:contact' %}">Request a consultation</a>
+        {% if site_information.primary_phone %}<a class="mt-4 block text-center text-sm font-bold text-maroon-800" href="tel:{{ site_information.primary_phone }}">{{ site_information.primary_phone }}</a>{% endif %}
+      </div>
+      {% if other_areas %}<div class="rounded-2xl border border-khaki-200 bg-white p-7"><h2 class="font-serif text-xl text-maroon-950">Other services</h2><ul class="mt-4 divide-y divide-stone-200">{% for area in other_areas %}<li><a class="flex items-center justify-between gap-3 py-3 text-sm font-bold text-slate-700 hover:text-maroon-700" href="{{ area.get_absolute_url }}">{{ area.name }} <span aria-hidden="true">→</span></a></li>{% endfor %}</ul></div>{% endif %}
+    </aside>
+  </div>
 </article>
+
+{% if area_people %}
+<section class="border-y border-khaki-200 bg-khaki-50 py-16">
+  <div class="mx-auto max-w-7xl px-6 sm:px-8">
+    <div><p class="eyebrow">Relevant experience</p><h2 class="section-title mt-2">People in this area</h2></div>
+    <div class="mt-8 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">{% for person in area_people %}<a class="card card-link overflow-hidden" href="{{ person.get_absolute_url }}">{% if person.photo %}<img class="aspect-[4/3] w-full object-cover object-top" src="{{ person.photo.url }}" alt="Portrait of {{ person }}" loading="lazy">{% else %}<img class="aspect-[4/3] w-full object-cover object-top" src="{% static 'images/default-attorney.svg' %}" alt="" loading="lazy">{% endif %}<div class="p-5"><h3 class="font-serif text-xl text-maroon-950">{{ person }}</h3><p class="mt-1 text-sm font-semibold text-maroon-700">{{ person.title }}</p></div></a>{% endfor %}</div>
+  </div>
+</section>
+{% endif %}
 {% endblock %}

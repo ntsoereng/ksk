@@ -62,9 +62,17 @@ class CaseStudyStaffForm(StaffModelForm):
 
 
 class AttorneyStaffForm(StaffModelForm):
+    first_name = forms.CharField(max_length=150)
+    last_name = forms.CharField(max_length=150)
+    person_email = forms.EmailField(
+        label='Email address',
+        help_text='Used for this profile. Creating a profile does not grant staff-portal access.',
+    )
+
     class Meta:
         model = Attorney
-        fields = ('user', 'title', 'member_type', 'slug', 'biography', 'photo',
+        fields = ('first_name', 'last_name', 'person_email',
+                  'title', 'member_type', 'slug', 'biography', 'photo',
                   'admission', 'email', 'phone', 'practice_areas',
                   'display_order', 'is_featured', 'is_active')
         widgets = {
@@ -74,16 +82,43 @@ class AttorneyStaffForm(StaffModelForm):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        available_users = get_user_model().objects.filter(is_active=True)
         if self.instance and self.instance.pk:
-            available_users = available_users.filter(
-                attorney_profile__isnull=True,
-            ) | available_users.filter(pk=self.instance.user_id)
-        else:
-            available_users = available_users.filter(attorney_profile__isnull=True)
-        self.fields['user'].queryset = available_users.distinct().order_by(
-            'first_name', 'last_name', 'email',
+            self.fields['first_name'].initial = self.instance.user.first_name
+            self.fields['last_name'].initial = self.instance.user.last_name
+            self.fields['person_email'].initial = self.instance.user.email
+
+    def clean_person_email(self):
+        email = get_user_model().objects.normalize_email(
+            self.cleaned_data['person_email'],
         )
+        users = get_user_model().objects.filter(email__iexact=email)
+        if self.instance and self.instance.pk:
+            users = users.exclude(pk=self.instance.user_id)
+        if users.exists():
+            raise forms.ValidationError(
+                'This email address is already attached to another account or profile.',
+            )
+        return email
+
+    def save(self, commit=True):
+        profile = super().save(commit=False)
+        if profile.pk:
+            user = profile.user
+            user.first_name = self.cleaned_data['first_name']
+            user.last_name = self.cleaned_data['last_name']
+            user.email = self.cleaned_data['person_email']
+            user.save(update_fields=('first_name', 'last_name', 'email'))
+        else:
+            user = get_user_model().objects.create_user(
+                email=self.cleaned_data['person_email'],
+                first_name=self.cleaned_data['first_name'],
+                last_name=self.cleaned_data['last_name'],
+            )
+            profile.user = user
+        if commit:
+            profile.save()
+            self.save_m2m()
+        return profile
 
 
 class SiteInformationStaffForm(StaffModelForm):
