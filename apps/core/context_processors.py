@@ -1,4 +1,5 @@
 from .models import SiteInformation
+from apps.practice_areas.models import PracticeArea
 
 
 def site_information(request):
@@ -20,4 +21,7 @@ def site_information(request):
     return {
         'site_information': information,
         'canonical_url': canonical_url,
+        'footer_practice_areas': PracticeArea.objects.filter(
+            is_active=True,
+        )[:5],
     }

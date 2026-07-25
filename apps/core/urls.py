@@ -10,6 +10,8 @@ urlpatterns = [
     path('contact/', views.contact, name='contact'),
     path('privacy/', views.privacy, name='privacy'),
     path('terms/', views.terms, name='terms'),
+    path('case-studies/', views.case_study_list, name='case_study_list'),
+    path('case-studies/<slug:slug>/', views.case_study_detail, name='case_study_detail'),
     path('staff/login/', views.StaffLoginView.as_view(), name='staff_login'),
     path('staff/logout/', LogoutView.as_view(next_page='core:home'), name='staff_logout'),
     path('staff/', views.staff_dashboard, name='staff_dashboard'),

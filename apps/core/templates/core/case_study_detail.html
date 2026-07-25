@@ -1,0 +1,36 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}{{ case_study.title }} | {{ site_information.firm_name|default:'Khoboko Law Chambers' }}{% endblock %}
+{% block meta_description %}{{ case_study.summary }}{% endblock %}
+{% block og_title %}{{ case_study.title }} | {{ site_information.firm_name|default:'Khoboko Law Chambers' }}{% endblock %}
+{% block og_description %}{{ case_study.summary }}{% endblock %}
+{% block content %}
+<article>
+  <header class="border-b border-khaki-200 bg-khaki-50">
+    <div class="mx-auto max-w-7xl px-6 py-12 sm:px-8 sm:py-16">
+      <nav class="flex items-center gap-2 text-sm text-slate-500" aria-label="Breadcrumb"><a class="font-semibold text-maroon-800 hover:text-maroon-600" href="{% url 'core:home' %}">Home</a><span aria-hidden="true">/</span><a class="font-semibold text-maroon-800 hover:text-maroon-600" href="{% url 'core:case_study_list' %}">Case studies</a><span aria-hidden="true">/</span><span aria-current="page">Matter</span></nav>
+      <div class="mt-10 max-w-4xl"><p class="eyebrow">{% if case_study.client_label %}{{ case_study.client_label }}{% else %}Case study{% endif %}</p><h1 class="mt-4 font-serif text-4xl leading-[1.12] text-maroon-950 sm:text-5xl lg:text-6xl">{{ case_study.title }}</h1><p class="mt-6 max-w-3xl text-xl leading-8 text-slate-600">{{ case_study.summary }}</p></div>
+    </div>
+  </header>
+
+  {% if case_study.featured_image %}<div class="mx-auto max-w-7xl px-6 pt-10 sm:px-8 sm:pt-14"><img class="aspect-[16/8] w-full rounded-2xl border border-khaki-200 object-cover shadow-sm" src="{{ case_study.featured_image.url }}" alt="{{ case_study.title }}"></div>{% endif %}
+
+  <div class="mx-auto grid max-w-6xl gap-12 px-6 py-14 sm:px-8 sm:py-20 lg:grid-cols-[minmax(0,720px)_280px] lg:items-start">
+    <div class="space-y-12">
+      <section><p class="eyebrow">The challenge</p><div class="article-content article-reading mt-5 text-slate-700">{{ case_study.challenge|safe }}</div></section>
+      <section><p class="eyebrow">Our approach</p><div class="article-content article-reading mt-5 text-slate-700">{{ case_study.approach|safe }}</div></section>
+      <section><p class="eyebrow">The outcome</p><div class="article-content article-reading mt-5 text-slate-700">{{ case_study.outcome|safe }}</div></section>
+    </div>
+    <aside class="space-y-6 lg:sticky lg:top-32">
+      <div class="rounded-xl border border-khaki-200 bg-khaki-50 p-6"><h2 class="font-serif text-xl text-maroon-950">About this case study</h2><p class="mt-3 text-sm leading-6 text-slate-600">Details may be anonymised or generalised to protect confidentiality. Past outcomes do not guarantee a similar result in another matter.</p></div>
+      <div class="rounded-xl bg-maroon-950 p-6 text-white"><h2 class="font-serif text-2xl">Discuss your matter</h2><p class="mt-3 text-sm leading-6 text-khaki-100">Contact our team for advice based on your own facts and circumstances.</p><a class="mt-5 inline-flex min-h-11 w-full items-center justify-center rounded-lg bg-khaki-400 px-4 py-3 text-sm font-bold text-maroon-950 hover:bg-khaki-300" href="{% url 'core:contact' %}">Contact the firm</a></div>
+    </aside>
+  </div>
+</article>
+
+{% if related_case_studies %}
+<section class="border-t border-khaki-200 bg-khaki-50 py-16">
+  <div class="mx-auto max-w-7xl px-6 sm:px-8"><div class="flex items-end justify-between gap-5"><div><p class="eyebrow">More experience</p><h2 class="section-title mt-2">Related case studies</h2></div><a class="text-link hidden sm:inline-flex" href="{% url 'core:case_study_list' %}">View all →</a></div><div class="mt-8 grid gap-5 md:grid-cols-3">{% for study in related_case_studies %}<a class="card card-link p-6" href="{{ study.get_absolute_url }}"><p class="eyebrow">{{ study.client_label|default:'Case study' }}</p><h3 class="mt-3 font-serif text-2xl leading-snug text-maroon-950">{{ study.title }}</h3><p class="mt-3 line-clamp-3 leading-7 text-slate-600">{{ study.summary }}</p><span class="mt-5 inline-block text-sm font-bold text-maroon-800">Read case study →</span></a>{% endfor %}</div></div>
+</section>
+{% endif %}
+{% endblock %}

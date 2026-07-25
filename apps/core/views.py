@@ -5,6 +5,7 @@ from django.contrib.auth.views import LoginView
 from django.core.exceptions import PermissionDenied, SuspiciousFileOperation
 from django.core.files.storage import default_storage
 from django.db import transaction
+from django.utils import timezone
 from django.shortcuts import redirect, render
 from django.http import FileResponse, Http404, HttpResponse
 from django.urls import reverse
@@ -134,6 +135,33 @@ def privacy(request):
 
 def terms(request):
     return render(request, 'core/terms.html')
+
+
+def case_study_list(request):
+    studies = CaseStudy.objects.filter(
+        status=CaseStudy.Status.PUBLISHED,
+        published_at__lte=timezone.now(),
+    )
+    return render(request, 'core/case_study_list.html', {
+        'case_studies': studies,
+    })
+
+
+def case_study_detail(request, slug):
+    study = get_object_or_404(
+        CaseStudy,
+        slug=slug,
+        status=CaseStudy.Status.PUBLISHED,
+        published_at__lte=timezone.now(),
+    )
+    related_studies = CaseStudy.objects.filter(
+        status=CaseStudy.Status.PUBLISHED,
+        published_at__lte=timezone.now(),
+    ).exclude(pk=study.pk)[:3]
+    return render(request, 'core/case_study_detail.html', {
+        'case_study': study,
+        'related_case_studies': related_studies,
+    })
 
 
 @staff_member_required(login_url='core:staff_login')

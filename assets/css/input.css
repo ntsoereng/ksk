@@ -80,6 +80,15 @@
   .article-content ol { @apply mt-5 list-decimal space-y-2 pl-6; }
   .article-content blockquote { @apply mt-6 border-l-4 border-khaki-400 pl-5 font-serif text-xl text-maroon-900; }
   .article-content a { @apply text-maroon-800 underline decoration-khaki-400 underline-offset-4; }
+  .article-reading { @apply text-[1.0625rem] font-normal leading-[1.9]; }
+  .article-reading p { @apply mt-6 font-normal; }
+  .article-reading > p:first-child { @apply mt-0; }
+  .article-reading h2 { @apply mb-4 mt-12 text-2xl font-normal leading-snug; }
+  .article-reading h3 { @apply mb-3 mt-9 text-xl font-normal leading-snug; }
+  .article-reading strong,
+  .article-reading b { @apply font-semibold; }
+  .article-reading li { @apply font-normal; }
+  .article-reading blockquote { @apply text-lg font-normal leading-8; }
   .rich-text-widget { @apply overflow-hidden rounded-lg border border-stone-300 bg-white shadow-sm; }
   .rich-text-toolbar { @apply flex flex-wrap gap-1 border-b border-stone-200 bg-khaki-50 p-2; }
   .rich-text-toolbar button { @apply min-h-9 rounded-md border border-transparent px-3 py-1.5 text-sm font-bold text-slate-700 transition hover:border-khaki-300 hover:bg-white hover:text-maroon-800; }

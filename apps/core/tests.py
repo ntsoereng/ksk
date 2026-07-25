@@ -9,7 +9,7 @@ from apps.articles.models import Article
 from apps.attorneys.models import Attorney
 from apps.practice_areas.models import PracticeArea
 
-from .models import Inquiry, SiteInformation
+from .models import CaseStudy, Inquiry, SiteInformation
 
 
 class SeoTests(TestCase):
@@ -78,6 +78,29 @@ class SeoTests(TestCase):
             b'example-image-bytes',
         )
         storage.open.assert_called_once_with('attorneys/example.png', 'rb')
+
+    def test_footer_provides_useful_navigation(self):
+        area = PracticeArea.objects.create(
+            name='Property law',
+            slug='property-law',
+            short_description='Property guidance.',
+            description='<p>Property services.</p>',
+        )
+
+        response = self.client.get(reverse('core:home'))
+
+        self.assertContains(response, 'Legal services')
+        self.assertContains(response, area.get_absolute_url())
+        self.assertContains(response, 'Privacy policy')
+        self.assertContains(response, 'Staff portal')
+        self.assertContains(response, 'Cletus Ntsoereng')
+        self.assertContains(response, 'https://cletusntsoereng.com')
+
+    def test_about_page_does_not_stack_duplicate_calls_to_action(self):
+        response = self.client.get(reverse('core:about'))
+
+        self.assertContains(response, 'How can we help?')
+        self.assertNotContains(response, 'Clear advice starts with a conversation.')
 
 
 class StaffDashboardTests(TestCase):
@@ -272,5 +295,41 @@ class DetailPageDesignTests(TestCase):
         self.assertContains(area_response, 'People in this area')
         self.assertContains(person_response, 'Areas of focus')
         self.assertContains(person_response, 'Meet more of our people', count=0)
+
+
+class PublicCaseStudyTests(TestCase):
+    def test_navigation_and_public_pages_show_only_published_case_studies(self):
+        published = CaseStudy.objects.create(
+            title='Resolved commercial matter',
+            slug='resolved-commercial-matter',
+            summary='A commercial matter resolved with a practical approach.',
+            challenge='<p>A complex challenge.</p>',
+            approach='<p>A careful legal strategy.</p>',
+            outcome='<p>A practical outcome.</p>',
+            status=CaseStudy.Status.PUBLISHED,
+        )
+        draft = CaseStudy.objects.create(
+            title='Confidential draft matter',
+            slug='confidential-draft-matter',
+            summary='This must remain private.',
+            challenge='<p>Draft.</p>',
+            approach='<p>Draft.</p>',
+            outcome='<p>Draft.</p>',
+            status=CaseStudy.Status.DRAFT,
+        )
+
+        response = self.client.get(reverse('core:case_study_list'))
+
+        self.assertContains(response, 'Case studies')
+        self.assertContains(response, published.title)
+        self.assertNotContains(response, draft.title)
+        self.assertEqual(
+            self.client.get(published.get_absolute_url()).status_code,
+            200,
+        )
+        self.assertEqual(
+            self.client.get(draft.get_absolute_url()).status_code,
+            404,
+        )
 
 # Create your tests here.

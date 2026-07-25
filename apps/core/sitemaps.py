@@ -5,6 +5,7 @@ from django.contrib.sitemaps import Sitemap
 from apps.articles.models import Article
 from apps.attorneys.models import Attorney
 from apps.practice_areas.models import PracticeArea
+from .models import CaseStudy
 
 
 class StaticViewSitemap(Sitemap):
@@ -13,7 +14,7 @@ class StaticViewSitemap(Sitemap):
 
     def items(self):
         return ('core:home', 'core:about', 'core:contact', 'practice_areas:list',
-                'attorneys:list', 'articles:list')
+                'core:case_study_list', 'attorneys:list', 'articles:list')
 
     def location(self, item):
         return reverse(item)
@@ -52,9 +53,24 @@ class ArticleSitemap(Sitemap):
         return obj.updated_at
 
 
+class CaseStudySitemap(Sitemap):
+    priority = 0.6
+    changefreq = 'monthly'
+
+    def items(self):
+        return CaseStudy.objects.filter(
+            status=CaseStudy.Status.PUBLISHED,
+            published_at__lte=timezone.now(),
+        )
+
+    def lastmod(self, obj):
+        return obj.updated_at
+
+
 sitemaps = {
     'static': StaticViewSitemap,
     'practice-areas': PracticeAreaSitemap,
     'people': AttorneySitemap,
     'articles': ArticleSitemap,
+    'case-studies': CaseStudySitemap,
 }

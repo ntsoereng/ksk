@@ -43,12 +43,13 @@
       <a class="shrink-0 rounded-sm" href="{% url 'core:home' %}" aria-label="{{ site_information.firm_name|default:'Khoboko Law Chambers' }} — home">
         <img class="h-11 w-auto sm:h-12" src="{% if site_information.logo %}{{ site_information.logo.url }}{% else %}{% static 'images/branding/klc-logo-navbar.png' %}{% endif %}" alt="{{ site_information.firm_name|default:'Khoboko Law Chambers' }}">
       </a>
-      <nav class="hidden items-center gap-1 text-sm font-semibold text-slate-700 lg:flex" aria-label="Primary navigation">
-        <a class="rounded-lg px-3 py-2 transition hover:bg-khaki-50 hover:text-maroon-800{% if request.resolver_match.url_name == 'about' %} bg-khaki-50 text-maroon-900{% endif %}" href="{% url 'core:about' %}"{% if request.resolver_match.url_name == 'about' %} aria-current="page"{% endif %}>About us</a>
-        <a class="rounded-lg px-3 py-2 transition hover:bg-khaki-50 hover:text-maroon-800{% if request.resolver_match.namespace == 'practice_areas' %} bg-khaki-50 text-maroon-900{% endif %}" href="{% url 'practice_areas:list' %}"{% if request.resolver_match.namespace == 'practice_areas' %} aria-current="page"{% endif %}>Practice areas</a>
-        <a class="rounded-lg px-3 py-2 transition hover:bg-khaki-50 hover:text-maroon-800{% if request.resolver_match.namespace == 'attorneys' %} bg-khaki-50 text-maroon-900{% endif %}" href="{% url 'attorneys:list' %}"{% if request.resolver_match.namespace == 'attorneys' %} aria-current="page"{% endif %}>Our people</a>
-        <a class="rounded-lg px-3 py-2 transition hover:bg-khaki-50 hover:text-maroon-800{% if request.resolver_match.namespace == 'articles' %} bg-khaki-50 text-maroon-900{% endif %}" href="{% url 'articles:list' %}"{% if request.resolver_match.namespace == 'articles' %} aria-current="page"{% endif %}>Insights</a>
-        <a class="button-primary ml-2" href="{% url 'core:contact' %}">Speak to us</a>
+      <nav class="hidden items-center gap-0.5 text-[0.8125rem] font-bold text-slate-700 lg:flex xl:gap-1 xl:text-sm" aria-label="Primary navigation">
+        <a class="rounded-lg px-2.5 py-2.5 transition hover:bg-khaki-50 hover:text-maroon-800 xl:px-3{% if request.resolver_match.url_name == 'about' %} bg-khaki-100 text-maroon-900{% endif %}" href="{% url 'core:about' %}"{% if request.resolver_match.url_name == 'about' %} aria-current="page"{% endif %}>About</a>
+        <a class="rounded-lg px-2.5 py-2.5 transition hover:bg-khaki-50 hover:text-maroon-800 xl:px-3{% if request.resolver_match.namespace == 'practice_areas' %} bg-khaki-100 text-maroon-900{% endif %}" href="{% url 'practice_areas:list' %}"{% if request.resolver_match.namespace == 'practice_areas' %} aria-current="page"{% endif %}>Practice areas</a>
+        <a class="rounded-lg px-2.5 py-2.5 transition hover:bg-khaki-50 hover:text-maroon-800 xl:px-3{% if request.resolver_match.url_name == 'case_study_list' or request.resolver_match.url_name == 'case_study_detail' %} bg-khaki-100 text-maroon-900{% endif %}" href="{% url 'core:case_study_list' %}"{% if request.resolver_match.url_name == 'case_study_list' or request.resolver_match.url_name == 'case_study_detail' %} aria-current="page"{% endif %}>Case studies</a>
+        <a class="rounded-lg px-2.5 py-2.5 transition hover:bg-khaki-50 hover:text-maroon-800 xl:px-3{% if request.resolver_match.namespace == 'attorneys' %} bg-khaki-100 text-maroon-900{% endif %}" href="{% url 'attorneys:list' %}"{% if request.resolver_match.namespace == 'attorneys' %} aria-current="page"{% endif %}>Our people</a>
+        <a class="rounded-lg px-2.5 py-2.5 transition hover:bg-khaki-50 hover:text-maroon-800 xl:px-3{% if request.resolver_match.namespace == 'articles' %} bg-khaki-100 text-maroon-900{% endif %}" href="{% url 'articles:list' %}"{% if request.resolver_match.namespace == 'articles' %} aria-current="page"{% endif %}>Insights</a>
+        <a class="button-primary ml-2 whitespace-nowrap" href="{% url 'core:contact' %}">Speak to us</a>
       </nav>
       <details class="group relative lg:hidden">
         <summary class="flex min-h-11 cursor-pointer list-none items-center gap-2 rounded-lg border border-khaki-300 px-3 py-2 text-sm font-bold text-maroon-900 transition hover:bg-khaki-50 [&::-webkit-details-marker]:hidden">
@@ -58,6 +59,7 @@
         <nav class="absolute right-0 z-20 mt-2 flex w-64 flex-col overflow-hidden rounded-xl border border-khaki-200 bg-white py-2 shadow-xl" aria-label="Mobile navigation">
           <a class="px-4 py-3 text-sm font-medium text-slate-700 hover:bg-khaki-50 hover:text-maroon-800" href="{% url 'core:about' %}">About us</a>
           <a class="px-4 py-3 text-sm font-medium text-slate-700 hover:bg-khaki-50 hover:text-maroon-800" href="{% url 'practice_areas:list' %}">Practice Areas</a>
+          <a class="px-4 py-3 text-sm font-medium text-slate-700 hover:bg-khaki-50 hover:text-maroon-800" href="{% url 'core:case_study_list' %}">Case studies</a>
           <a class="px-4 py-3 text-sm font-medium text-slate-700 hover:bg-khaki-50 hover:text-maroon-800" href="{% url 'attorneys:list' %}">Our people</a>
           <a class="px-4 py-3 text-sm font-medium text-slate-700 hover:bg-khaki-50 hover:text-maroon-800" href="{% url 'articles:list' %}">Insights</a>
           <a class="mx-3 my-2 rounded bg-maroon-800 px-4 py-3 text-center text-sm font-semibold text-white hover:bg-maroon-700" href="{% url 'core:contact' %}">Speak to us</a>
@@ -73,27 +75,84 @@
     {% endif %}
     {% block content %}{% endblock %}
   </main>
-  <footer class="mt-20 bg-maroon-950 text-khaki-100">
-    <div class="mx-auto grid max-w-7xl gap-10 px-6 py-14 text-sm md:grid-cols-[1.3fr_1fr_auto]">
-      <div>
-        <p class="font-serif text-xl text-white">{{ site_information.firm_name|default:'Khoboko Law Chambers' }}</p>
-        <p class="mt-2 max-w-xl text-khaki-200">{{ site_information.tagline|default:'Clear, trusted legal counsel.' }}</p>
+  <footer class="bg-maroon-950 text-khaki-100">
+    {% block footer_cta %}
+    <div class="border-b border-white/10 bg-maroon-900">
+      <div class="mx-auto flex max-w-7xl flex-col gap-8 px-6 py-12 sm:px-8 sm:py-14 lg:flex-row lg:items-center lg:justify-between lg:gap-12">
+        <div>
+          <p class="text-xs font-bold uppercase tracking-[0.2em] text-khaki-300">How can we help?</p>
+          <h2 class="mt-3 max-w-2xl font-serif text-2xl leading-snug text-white sm:text-3xl">Clear advice starts with a conversation.</h2>
+        </div>
+        <div class="flex shrink-0 flex-col gap-4 sm:flex-row">
+          <a class="inline-flex min-h-12 items-center justify-center rounded-lg bg-khaki-400 px-6 py-3.5 text-sm font-bold text-maroon-950 transition hover:bg-khaki-300" href="{% url 'core:contact' %}">Request a consultation</a>
+          {% if site_information.primary_phone %}<a class="inline-flex min-h-12 items-center justify-center rounded-lg border border-khaki-300/60 px-6 py-3.5 text-sm font-bold text-white transition hover:bg-white/10" href="tel:{{ site_information.primary_phone }}">Call {{ site_information.primary_phone }}</a>{% endif %}
+        </div>
       </div>
-      <div class="space-y-2 text-khaki-200">
-        {% if site_information.physical_address %}<p class="whitespace-pre-line">{{ site_information.physical_address }}</p>{% endif %}
-        {% if site_information.primary_phone %}<p><a href="tel:{{ site_information.primary_phone }}" class="hover:text-white">{{ site_information.primary_phone }}</a></p>{% endif %}
-        {% if site_information.primary_email %}<p><a href="mailto:{{ site_information.primary_email }}" class="hover:text-white">{{ site_information.primary_email }}</a></p>{% endif %}
-      </div>
-      <nav class="flex flex-col gap-3" aria-label="Legal">
-        <a class="rounded hover:text-white" href="{% url 'core:privacy' %}">Privacy</a>
-        <a class="rounded hover:text-white" href="{% url 'core:terms' %}">Website terms</a>
-        <a class="mt-3 text-xs text-khaki-400/80 hover:text-white" href="{% url 'core:staff_dashboard' %}">Staff portal</a>
-      </nav>
     </div>
+    {% endblock %}
+
+    <div class="mx-auto grid max-w-7xl gap-10 px-6 py-14 sm:px-8 md:grid-cols-2 lg:grid-cols-[1.35fr_1fr_1fr_1.15fr] lg:gap-12">
+      <div>
+        <a class="inline-block rounded-sm" href="{% url 'core:home' %}">
+          <span class="font-serif text-2xl text-white">{{ site_information.firm_name|default:'Khoboko Law Chambers' }}</span>
+        </a>
+        <p class="mt-4 max-w-sm text-sm leading-7 text-khaki-200">{{ site_information.tagline|default:'Clear, trusted legal counsel.' }}</p>
+        <div class="mt-6 flex flex-wrap gap-3">
+          {% if site_information.facebook_url %}<a class="flex h-10 w-10 items-center justify-center rounded-full border border-white/15 text-xs font-bold transition hover:border-khaki-300 hover:bg-white/10" href="{{ site_information.facebook_url }}" target="_blank" rel="noopener noreferrer" aria-label="Facebook">f</a>{% endif %}
+          {% if site_information.linkedin_url %}<a class="flex h-10 w-10 items-center justify-center rounded-full border border-white/15 text-xs font-bold transition hover:border-khaki-300 hover:bg-white/10" href="{{ site_information.linkedin_url }}" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn">in</a>{% endif %}
+          {% if site_information.instagram_url %}<a class="flex h-10 w-10 items-center justify-center rounded-full border border-white/15 text-xs font-bold transition hover:border-khaki-300 hover:bg-white/10" href="{{ site_information.instagram_url }}" target="_blank" rel="noopener noreferrer" aria-label="Instagram">ig</a>{% endif %}
+        </div>
+      </div>
+
+      <nav aria-labelledby="footer-firm-heading">
+        <h2 id="footer-firm-heading" class="text-xs font-bold uppercase tracking-[0.18em] text-khaki-300">The firm</h2>
+        <ul class="mt-5 space-y-3 text-sm">
+          <li><a class="transition hover:text-white" href="{% url 'core:about' %}">About us</a></li>
+          <li><a class="transition hover:text-white" href="{% url 'attorneys:list' %}">Our people</a></li>
+          <li><a class="transition hover:text-white" href="{% url 'core:case_study_list' %}">Case studies</a></li>
+          <li><a class="transition hover:text-white" href="{% url 'articles:list' %}">Legal insights</a></li>
+          <li><a class="transition hover:text-white" href="{% url 'core:contact' %}">Contact us</a></li>
+        </ul>
+      </nav>
+
+      <nav aria-labelledby="footer-services-heading">
+        <h2 id="footer-services-heading" class="text-xs font-bold uppercase tracking-[0.18em] text-khaki-300">Legal services</h2>
+        <ul class="mt-5 space-y-3 text-sm">
+          {% for area in footer_practice_areas %}
+            <li><a class="transition hover:text-white" href="{{ area.get_absolute_url }}">{{ area.name }}</a></li>
+          {% empty %}
+            <li><a class="transition hover:text-white" href="{% url 'practice_areas:list' %}">View our practice areas</a></li>
+          {% endfor %}
+          {% if footer_practice_areas %}<li><a class="font-bold text-khaki-300 transition hover:text-white" href="{% url 'practice_areas:list' %}">View all services →</a></li>{% endif %}
+        </ul>
+      </nav>
+
+      <div>
+        <h2 class="text-xs font-bold uppercase tracking-[0.18em] text-khaki-300">Contact</h2>
+        <address class="mt-5 space-y-3 text-sm not-italic leading-6 text-khaki-100">
+          {% if site_information.physical_address %}<p class="whitespace-pre-line">{{ site_information.physical_address }}</p>{% endif %}
+          {% if site_information.primary_phone %}<p><a class="transition hover:text-white" href="tel:{{ site_information.primary_phone }}">{{ site_information.primary_phone }}</a></p>{% endif %}
+          {% if site_information.secondary_phone %}<p><a class="transition hover:text-white" href="tel:{{ site_information.secondary_phone }}">{{ site_information.secondary_phone }}</a></p>{% endif %}
+          {% if site_information.primary_email %}<p><a class="break-all transition hover:text-white" href="mailto:{{ site_information.primary_email }}">{{ site_information.primary_email }}</a></p>{% endif %}
+          {% if site_information.business_hours %}<p class="text-khaki-300">{{ site_information.business_hours }}</p>{% endif %}
+          {% if site_information.google_maps_url %}<p><a class="font-bold text-khaki-300 transition hover:text-white" href="{{ site_information.google_maps_url }}" target="_blank" rel="noopener noreferrer">Get directions →</a></p>{% endif %}
+        </address>
+      </div>
+    </div>
+
     <div class="border-t border-white/10">
-      <div class="mx-auto max-w-7xl px-6 py-6 text-xs leading-6 text-khaki-300">
-        <p>{{ site_information.legal_disclaimer|default:'The information on this website is general information only and is not legal advice. Contacting the firm does not, by itself, create a lawyer-client relationship. Please do not send confidential or time-sensitive information through this website.' }}</p>
-        <p class="mt-3">© {% now "Y" %} {{ site_information.firm_name|default:'Khoboko Law Chambers' }}. All rights reserved.</p>
+      <div class="mx-auto max-w-7xl px-6 py-6 sm:px-8">
+        <p class="max-w-5xl text-xs leading-6 text-khaki-300">{{ site_information.legal_disclaimer|default:'The information on this website is general information only and is not legal advice. Contacting the firm does not, by itself, create a lawyer-client relationship. Please do not send confidential or time-sensitive information through this website.' }}</p>
+        <div class="mt-6 flex flex-col gap-4 border-t border-white/10 pt-6 text-xs leading-6 text-khaki-300 sm:flex-row sm:items-center sm:justify-between">
+          <p>© {% now "Y" %} {{ site_information.firm_name|default:'Khoboko Law Chambers' }}. All rights reserved.<br class="sm:hidden"> <span class="hidden sm:inline" aria-hidden="true">·</span> Designed and developed by <a class="font-semibold text-khaki-200 underline decoration-khaki-500 underline-offset-4 transition hover:text-white" href="https://cletusntsoereng.com" target="_blank" rel="noopener noreferrer">Cletus Ntsoereng</a>.</p>
+          <nav class="flex flex-wrap items-center" aria-label="Legal and staff">
+            <a class="transition hover:text-white" href="{% url 'core:privacy' %}">Privacy policy</a>
+            <span class="mx-3 text-white/25" aria-hidden="true">·</span>
+            <a class="transition hover:text-white" href="{% url 'core:terms' %}">Website terms</a>
+            <span class="mx-3 text-white/25" aria-hidden="true">·</span>
+            <a class="text-khaki-400/80 transition hover:text-white" href="{% url 'core:staff_dashboard' %}">Staff portal</a>
+          </nav>
+        </div>
       </div>
     </div>
   </footer>

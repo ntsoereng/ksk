@@ -1,4 +1,5 @@
 from django.db import models
+from django.urls import reverse
 from django.utils import timezone
 from apps.articles.sanitizers import sanitize_rich_text
 
@@ -54,6 +55,9 @@ class CaseStudy(models.Model):
 
     def __str__(self):
         return self.title
+
+    def get_absolute_url(self):
+        return reverse('core:case_study_detail', kwargs={'slug': self.slug})
 
     def save(self, *args, **kwargs):
         self.challenge = sanitize_rich_text(self.challenge)
