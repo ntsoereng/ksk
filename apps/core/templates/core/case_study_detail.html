@@ -6,7 +6,7 @@
 {% block og_description %}{{ case_study.summary }}{% endblock %}
 {% block content %}
 <article>
-  <header class="border-b border-khaki-200 bg-khaki-50">
+  <header class="page-intro border-b border-khaki-200">
     <div class="mx-auto max-w-7xl px-6 py-12 sm:px-8 sm:py-16">
       <nav class="flex items-center gap-2 text-sm text-slate-500" aria-label="Breadcrumb"><a class="font-semibold text-maroon-800 hover:text-maroon-600" href="{% url 'core:home' %}">Home</a><span aria-hidden="true">/</span><a class="font-semibold text-maroon-800 hover:text-maroon-600" href="{% url 'core:case_study_list' %}">Case studies</a><span aria-hidden="true">/</span><span aria-current="page">Matter</span></nav>
       <div class="mt-10 max-w-4xl"><p class="eyebrow">{% if case_study.client_label %}{{ case_study.client_label }}{% else %}Case study{% endif %}</p><h1 class="mt-4 font-serif text-4xl leading-[1.12] text-maroon-950 sm:text-5xl lg:text-6xl">{{ case_study.title }}</h1><p class="mt-6 max-w-3xl text-xl leading-8 text-slate-600">{{ case_study.summary }}</p></div>

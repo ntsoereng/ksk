@@ -82,6 +82,7 @@ MIDDLEWARE = [
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
+    'apps.core.middleware.FormProtectionMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
@@ -105,6 +106,19 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = 'config.wsgi.application'
+
+# Database-backed counters work across processes and hosts sharing this database.
+# Limits are (attempts, window in seconds), including invalid submissions.
+FORM_RATE_LIMITS = {
+    'contact_ip': (config('FORM_CONTACT_IP_LIMIT', default=5, cast=int), 900),
+    'contact_email': (config('FORM_CONTACT_EMAIL_LIMIT', default=3, cast=int), 900),
+    'login_ip': (config('FORM_LOGIN_IP_LIMIT', default=20, cast=int), 900),
+    'login_account': (config('FORM_LOGIN_ACCOUNT_LIMIT', default=10, cast=int), 900),
+    'upload_user': (config('FORM_UPLOAD_LIMIT', default=20, cast=int), 60),
+    'staff_user': (config('FORM_STAFF_WRITE_LIMIT', default=90, cast=int), 60),
+}
+# Leave empty unless a known reverse proxy appends/overwrites X-Forwarded-For.
+FORM_TRUSTED_PROXIES = config('FORM_TRUSTED_PROXIES', default='', cast=Csv())
 
 
 # Database

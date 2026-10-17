@@ -81,6 +81,27 @@ Staff can also use the branded portal at `/staff/`; a discreet sign-in link appe
 - Review incoming **Consultation inquiries**.
 - Create **Articles** as drafts, add rich content with the editor toolbar, and set the status to Published when ready. Articles without a featured image use the branded default artwork.
 
+The **Image** button in the dashboard’s rich-text editors inserts images into the body of articles, case-study narratives, practice areas and biographies. Choose a JPEG, PNG or WebP file (up to 8 MB and 24 megapixels), or provide an image URL, then add alt text and an optional caption. Uploaded images are stored in `media/content/`, independently of featured images. Save the content after inserting images. Uploads require staff access and permission to add or change the relevant content type.
+
+In **Staff portal → Site settings → Google Maps embed**, paste the iframe code from Google Maps’ **Share → Embed a map**, or its `https://www.google.com/maps/embed…` URL. The contact page shows the responsive map after saving; leave this setting blank to hide it. The separate **Google maps URL** setting supplies the directions link. Run `python manage.py migrate` when deploying the new map setting, followed by the CSS build and `collectstatic` as usual.
+
+## Form protection and website policies
+
+Run migrations before serving the updated application: the `FormRateLimit` table stores atomic request counters shared by all workers using the same database. No additional cache or service is needed. Counters store keyed hashes, expire at the end of each window, and are pruned in bounded batches during subsequent activity. Limits count all attempts, including invalid submissions. A blocked request returns HTTP 429 with a `Retry-After` header; upload requests receive a JSON error. GET requests and staff sign-out remain available.
+
+| Protected action | Default allowance |
+| --- | --- |
+| Contact enquiries | 5 attempts per network address and 3 per email per 15-minute window |
+| Staff and Django admin sign-in, combined | 20 attempts per network address and 10 per account per 15-minute window |
+| Staff inline image uploads | 20 attempts per staff account per minute |
+| Other staff/admin writes | 90 attempts per staff account per minute |
+
+The `.env.example` lists threshold settings. Forwarded IP headers are ignored unless the connecting peer is in `FORM_TRUSTED_PROXIES`. On a reverse proxy, configure only its exact trusted IPs or CIDRs, and ensure it appends or overwrites `X-Forwarded-For`. The limiter walks that chain from the trusted end. Never configure arbitrary public networks as trusted proxies. Without proxy configuration, requests are safely grouped by the connecting peer, which can mean a shared allowance behind a proxy.
+
+The contact form also has a non-interactive spam-trap field, a 5,000-character message limit, and server-side validation. Existing Django CSRF, staff permissions and image validation remain enabled. Configure request body/connection limits at the reverse proxy as well; application request limits do not replace network-level protection against volumetric traffic. See [Django’s security guidance](https://docs.djangoproject.com/en/6.0/topics/security/).
+
+The default privacy and terms pages now cover initial enquiries, accepting instructions, confidentiality, website use, retention, essential cookies, security counters, external maps and images, privacy requests, and applicable law. Privacy wording was informed by the [Lesotho Data Protection Act published in the Government Gazette](https://www.nic.ls/lsnic/community/policies/Data_Protection_Act_2011_Lesotho.pdf). Dashboard overrides still take precedence: review any existing **Privacy policy** or **Terms of use** values in Site settings if older copy is still displayed. Keep the published policy, revision date, service-provider arrangements and retention practices aligned with the firm’s actual operations.
+
 Uploaded files are stored in the project `media/` directory by default. Set `MEDIA_ROOT` to persistent storage in production. `DJANGO_SERVE_MEDIA=true` lets Django deliver uploads when the hosting platform does not map `/media/`; high-traffic deployments should set it to false after configuring Nginx, Apache, or object storage to serve that directory.
 
 ## Frontend commands

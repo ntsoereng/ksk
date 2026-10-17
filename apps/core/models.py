@@ -2,6 +2,15 @@ from django.db import models
 from django.urls import reverse
 from django.utils import timezone
 from apps.articles.sanitizers import sanitize_rich_text
+from .validators import validate_google_maps_embed_url
+
+
+class FormRateLimit(models.Model):
+    """Short-lived, shared counters; identities are stored only as keyed hashes."""
+
+    key = models.CharField(max_length=64, primary_key=True)
+    count = models.PositiveIntegerField(default=0)
+    expires_at = models.DateTimeField(db_index=True)
 
 
 class Inquiry(models.Model):
@@ -102,6 +111,12 @@ class SiteInformation(models.Model):
     postal_address = models.CharField(max_length=255, blank=True)
     business_hours = models.CharField(max_length=255, blank=True)
     google_maps_url = models.URLField(blank=True)
+    google_maps_embed_url = models.URLField(
+        max_length=4096,
+        blank=True,
+        validators=[validate_google_maps_embed_url],
+        help_text='In Google Maps choose Share → Embed a map. Paste the iframe code or its src URL. Leave blank to hide the map.',
+    )
 
     hero_title = models.CharField(max_length=255, default='Guiding you through the moments that matter.')
     hero_text = models.TextField(blank=True)

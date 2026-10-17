@@ -8,7 +8,7 @@
   <div class="p-6">
     <h3 class="font-serif text-2xl text-maroon-950">{{ person }}</h3>
     <p class="mt-1 font-semibold text-maroon-700">{{ person.title }}</p>
-    <p class="mt-4 line-clamp-3 leading-7 text-slate-600">{{ person.biography|truncatewords:24 }}</p>
+    <p class="mt-4 line-clamp-3 leading-7 text-slate-600">{{ person.biography|striptags|truncatewords:24 }}</p>
     <span class="mt-5 inline-block text-sm font-bold text-maroon-800">View profile <span aria-hidden="true">→</span></span>
   </div>
 </a>

@@ -1,0 +1,13 @@
+{% extends 'base.html' %}
+{% block title %}Please try again shortly | {{ site_information.firm_name }}{% endblock %}
+{% block robots %}noindex, nofollow{% endblock %}
+{% block content %}
+<section class="mx-auto max-w-2xl px-6 py-20 sm:py-28">
+  <span class="contact-icon">{% include 'components/icon.html' with name='clock' %}</span>
+  <p class="eyebrow mt-7">Please pause for a moment</p>
+  <h1 class="page-title">Too many requests.</h1>
+  <p class="mt-6 leading-8 text-slate-600">For security, we limit repeated submissions. Please try again in approximately {{ retry_minutes }} minute{{ retry_minutes|pluralize }}. Your last submission was not processed.</p>
+  <a class="button-primary mt-8" href="{{ return_url }}">Return to the page {% include 'components/icon.html' with name='arrow' %}</a>
+  {% if site_information.primary_phone %}<p class="mt-6 text-sm text-slate-600">You can also reach our chambers on <a class="text-link" href="tel:{{ site_information.primary_phone }}">{{ site_information.primary_phone }}</a>.</p>{% endif %}
+</section>
+{% endblock %}

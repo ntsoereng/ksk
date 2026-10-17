@@ -1,5 +1,7 @@
 from django.contrib import admin
 from .models import CaseStudy, Inquiry, SiteInformation
+from .forms import SiteInformationAdminForm
+from .staff_forms import CaseStudyStaffForm
 
 
 @admin.register(Inquiry)
@@ -15,6 +17,7 @@ class InquiryAdmin(admin.ModelAdmin):
 
 @admin.register(CaseStudy)
 class CaseStudyAdmin(admin.ModelAdmin):
+    form = CaseStudyStaffForm
     list_display = ('title', 'status', 'is_featured', 'published_at', 'updated_at')
     list_editable = ('status', 'is_featured')
     list_filter = ('status', 'is_featured', 'published_at')
@@ -37,6 +40,7 @@ class CaseStudyAdmin(admin.ModelAdmin):
 
 @admin.register(SiteInformation)
 class SiteInformationAdmin(admin.ModelAdmin):
+    form = SiteInformationAdminForm
     fieldsets = (
         ('Branding', {
             'fields': ('firm_name', 'tagline', 'logo', 'favicon'),
@@ -48,7 +52,7 @@ class SiteInformationAdmin(admin.ModelAdmin):
         ('Contact details', {
             'fields': (
                 'primary_phone', 'secondary_phone', 'primary_email',
-                'physical_address', 'postal_address', 'business_hours', 'google_maps_url',
+                'physical_address', 'postal_address', 'business_hours', 'google_maps_url', 'google_maps_embed_url',
             ),
         }),
         ('Homepage hero', {

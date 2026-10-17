@@ -7,11 +7,16 @@ from django.core.files.storage import default_storage
 from django.db import transaction
 from django.utils import timezone
 from django.shortcuts import redirect, render
-from django.http import FileResponse, Http404, HttpResponse
+from django.http import FileResponse, Http404, HttpResponse, JsonResponse
 from django.urls import reverse
 from django.shortcuts import get_object_or_404
 from django.contrib.staticfiles import finders
 import mimetypes
+from io import BytesIO
+from uuid import uuid4
+import warnings
+from PIL import Image, ImageOps, UnidentifiedImageError
+from django.core.files.base import ContentFile
 from django.views.decorators.http import require_http_methods
 
 from apps.attorneys.models import Attorney
@@ -204,6 +209,44 @@ def staff_content_list(request, section):
             f"{config['permission_app']}.delete_{config['permission_model']}"
         ),
     })
+
+
+@staff_member_required(login_url='core:staff_login')
+@require_http_methods(['POST'])
+def staff_content_image_upload(request, section):
+    config = _content_config(section)
+    if not any(request.user.has_perm(
+        f"{config['permission_app']}.{action}_{config['permission_model']}"
+    ) for action in ('add', 'change')):
+        raise PermissionDenied
+    upload = request.FILES.get('image')
+    if not upload:
+        return JsonResponse({'error': 'Choose an image to upload.'}, status=400)
+    if upload.size > 8 * 1024 * 1024:
+        return JsonResponse({'error': 'Images must be 8 MB or smaller.'}, status=400)
+    try:
+        with warnings.catch_warnings():
+            warnings.simplefilter('error', Image.DecompressionBombWarning)
+            with Image.open(upload) as image:
+                if image.format not in {'JPEG', 'PNG', 'WEBP'}:
+                    raise ValueError
+                if image.width * image.height > 24_000_000:
+                    raise ValueError
+                image.verify()
+            upload.seek(0)
+            with Image.open(upload) as image:
+                # Re-encode to exclude active payloads and image metadata.
+                image = ImageOps.exif_transpose(image)
+                image.thumbnail((2400, 2400))
+                output = BytesIO()
+                mode = 'RGBA' if 'A' in image.getbands() or 'transparency' in image.info else 'RGB'
+                image.convert(mode).save(output, format='PNG')
+    except (UnidentifiedImageError, OSError, ValueError, Image.DecompressionBombError, Image.DecompressionBombWarning):
+        return JsonResponse({'error': 'Choose a valid JPEG, PNG or WebP image under 24 megapixels.'}, status=400)
+    path = default_storage.save(
+        f'content/{section}/{uuid4().hex}.png', ContentFile(output.getvalue()),
+    )
+    return JsonResponse({'url': default_storage.url(path)}, status=201)
 
 
 @staff_member_required(login_url='core:staff_login')

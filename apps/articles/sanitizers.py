@@ -6,8 +6,8 @@ from urllib.parse import urlparse
 class RichTextSanitizer(HTMLParser):
     """Keep the limited, safe HTML produced by the staff article editor."""
 
-    allowed_tags = {'p', 'br', 'strong', 'b', 'em', 'i', 'ul', 'ol', 'li', 'h2', 'h3', 'blockquote', 'a'}
-    void_tags = {'br'}
+    allowed_tags = {'p', 'br', 'strong', 'b', 'em', 'i', 'ul', 'ol', 'li', 'h2', 'h3', 'blockquote', 'a', 'img', 'figure', 'figcaption'}
+    void_tags = {'br', 'img'}
 
     def __init__(self):
         super().__init__()
@@ -15,6 +15,23 @@ class RichTextSanitizer(HTMLParser):
 
     def handle_starttag(self, tag, attrs):
         if tag not in self.allowed_tags:
+            return
+        if tag == 'img':
+            attributes = dict(attrs)
+            src = attributes.get('src') or ''
+            try:
+                parsed = urlparse(src)
+                valid = (
+                    (parsed.scheme in {'https', 'http'} and bool(parsed.netloc))
+                    or (src.startswith('/') and not src.startswith('//'))
+                ) and not any(ord(char) < 32 or char == chr(92) for char in src)
+            except ValueError:
+                valid = False
+            if valid:
+                alt = attributes.get('alt') or ''
+                self.parts.append(
+                    f'<img src="{escape(src, quote=True)}" alt="{escape(alt, quote=True)}" loading="lazy" decoding="async">'
+                )
             return
         if tag == 'a':
             href = dict(attrs).get('href', '')
@@ -27,7 +44,7 @@ class RichTextSanitizer(HTMLParser):
 
     def handle_startendtag(self, tag, attrs):
         if tag in self.void_tags:
-            self.parts.append('<br>')
+            self.handle_starttag(tag, attrs)
 
     def handle_endtag(self, tag):
         if tag in self.allowed_tags and tag not in self.void_tags:

@@ -6,7 +6,7 @@
 {% block og_description %}{{ attorney.title }} — {{ attorney.biography|striptags|truncatewords:18 }}{% endblock %}
 {% block content %}
 <article>
-  <header class="border-b border-khaki-200 bg-khaki-50">
+  <header class="page-intro border-b border-khaki-200">
     <div class="mx-auto max-w-7xl px-6 pt-10 sm:px-8 sm:pt-12">
       <nav class="flex items-center gap-2 text-sm text-slate-500" aria-label="Breadcrumb"><a class="font-semibold text-maroon-800 hover:text-maroon-600" href="{% url 'core:home' %}">Home</a><span aria-hidden="true">/</span><a class="font-semibold text-maroon-800 hover:text-maroon-600" href="{% url 'attorneys:list' %}">Our people</a><span aria-hidden="true">/</span><span aria-current="page">{{ attorney }}</span></nav>
       <div class="mt-10 grid gap-10 lg:grid-cols-[380px_minmax(0,1fr)] lg:gap-16">

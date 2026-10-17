@@ -7,6 +7,7 @@ from apps.attorneys.models import Attorney
 from apps.practice_areas.models import PracticeArea
 
 from .models import CaseStudy, SiteInformation
+from .forms import GoogleMapsEmbedField
 
 
 class StaffModelForm(forms.ModelForm):
@@ -16,6 +17,11 @@ class StaffModelForm(forms.ModelForm):
         super().__init__(*args, **kwargs)
         for field in self.fields.values():
             widget = field.widget
+            if isinstance(widget, RichTextWidget):
+                widget.upload_section = {
+                    Article: 'posts', CaseStudy: 'case-studies',
+                    PracticeArea: 'practice-areas', Attorney: 'people',
+                }.get(self._meta.model, 'posts')
             if isinstance(widget, (forms.CheckboxInput, forms.ClearableFileInput)):
                 continue
             existing = widget.attrs.get('class', '')
@@ -122,6 +128,8 @@ class AttorneyStaffForm(StaffModelForm):
 
 
 class SiteInformationStaffForm(StaffModelForm):
+    google_maps_embed_url = GoogleMapsEmbedField()
+
     class Meta:
         model = SiteInformation
         exclude = ('updated_at',)

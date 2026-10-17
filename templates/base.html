@@ -38,10 +38,10 @@
 </head>
 <body class="flex min-h-screen flex-col bg-ivory-50 text-ink-800 antialiased">
   <a class="sr-only fixed left-4 top-4 z-[60] rounded bg-white px-4 py-3 font-semibold text-maroon-900 shadow-lg focus:not-sr-only" href="#main-content">Skip to main content</a>
-  <header class="sticky top-0 z-50 border-b border-gold-200/70 bg-ivory-50/95 backdrop-blur-md">
+  <header class="site-header sticky top-0 z-50">
     <div class="mx-auto flex h-24 max-w-7xl items-center justify-between gap-6 px-5 sm:px-8">
       <a class="shrink-0 rounded-sm" href="{% url 'core:home' %}" aria-label="{{ site_information.firm_name|default:'Khoboko Law Chambers' }} — home">
-        <img class="h-11 w-auto sm:h-12" src="{% if site_information.logo %}{{ site_information.logo.url }}{% else %}{% static 'images/branding/klc-logo-navbar.png' %}{% endif %}" alt="{{ site_information.firm_name|default:'Khoboko Law Chambers' }}">
+        <img class="brand-logo h-11 w-auto sm:h-12" src="{% if site_information.logo %}{{ site_information.logo.url }}{% else %}{% static 'images/branding/klc-logo-navbar.png' %}{% endif %}" alt="{{ site_information.firm_name|default:'Khoboko Law Chambers' }}">
       </a>
       <nav class="hidden items-center gap-0.5 text-[0.8125rem] font-bold text-slate-700 lg:flex xl:gap-1 xl:text-sm" aria-label="Primary navigation">
         <a class="rounded-lg px-2.5 py-2.5 transition hover:bg-khaki-50 hover:text-maroon-800 xl:px-3{% if request.resolver_match.url_name == 'about' %} bg-khaki-100 text-maroon-900{% endif %}" href="{% url 'core:about' %}"{% if request.resolver_match.url_name == 'about' %} aria-current="page"{% endif %}>About</a>
@@ -49,7 +49,7 @@
         <a class="rounded-lg px-2.5 py-2.5 transition hover:bg-khaki-50 hover:text-maroon-800 xl:px-3{% if request.resolver_match.url_name == 'case_study_list' or request.resolver_match.url_name == 'case_study_detail' %} bg-khaki-100 text-maroon-900{% endif %}" href="{% url 'core:case_study_list' %}"{% if request.resolver_match.url_name == 'case_study_list' or request.resolver_match.url_name == 'case_study_detail' %} aria-current="page"{% endif %}>Case studies</a>
         <a class="rounded-lg px-2.5 py-2.5 transition hover:bg-khaki-50 hover:text-maroon-800 xl:px-3{% if request.resolver_match.namespace == 'attorneys' %} bg-khaki-100 text-maroon-900{% endif %}" href="{% url 'attorneys:list' %}"{% if request.resolver_match.namespace == 'attorneys' %} aria-current="page"{% endif %}>Our people</a>
         <a class="rounded-lg px-2.5 py-2.5 transition hover:bg-khaki-50 hover:text-maroon-800 xl:px-3{% if request.resolver_match.namespace == 'articles' %} bg-khaki-100 text-maroon-900{% endif %}" href="{% url 'articles:list' %}"{% if request.resolver_match.namespace == 'articles' %} aria-current="page"{% endif %}>Insights</a>
-        <a class="button-primary ml-2 whitespace-nowrap" href="{% url 'core:contact' %}">Speak to us</a>
+        <a class="button-primary ml-2 whitespace-nowrap" href="{% url 'core:contact' %}">Speak to us {% include "components/icon.html" with name="arrow" %}</a>
       </nav>
       <details class="group relative lg:hidden">
         <summary class="flex min-h-11 cursor-pointer list-none items-center gap-2 rounded-lg border border-khaki-300 px-3 py-2 text-sm font-bold text-maroon-900 transition hover:bg-khaki-50 [&::-webkit-details-marker]:hidden">
@@ -62,7 +62,7 @@
           <a class="px-4 py-3 text-sm font-medium text-slate-700 hover:bg-khaki-50 hover:text-maroon-800" href="{% url 'core:case_study_list' %}">Case studies</a>
           <a class="px-4 py-3 text-sm font-medium text-slate-700 hover:bg-khaki-50 hover:text-maroon-800" href="{% url 'attorneys:list' %}">Our people</a>
           <a class="px-4 py-3 text-sm font-medium text-slate-700 hover:bg-khaki-50 hover:text-maroon-800" href="{% url 'articles:list' %}">Insights</a>
-          <a class="mx-3 my-2 rounded bg-maroon-800 px-4 py-3 text-center text-sm font-semibold text-white hover:bg-maroon-700" href="{% url 'core:contact' %}">Speak to us</a>
+          <a class="mx-3 my-2 flex items-center justify-center gap-3 rounded-full bg-maroon-800 px-4 py-3 text-center text-sm font-semibold text-white hover:bg-maroon-700" href="{% url 'core:contact' %}">Speak to us {% include "components/icon.html" with name="arrow" %}</a>
         </nav>
       </details>
     </div>
@@ -75,32 +75,32 @@
     {% endif %}
     {% block content %}{% endblock %}
   </main>
-  <footer class="bg-maroon-950 text-khaki-100">
+  <footer class="site-footer text-khaki-100">
     {% block footer_cta %}
-    <div class="border-b border-white/10 bg-maroon-900">
+    <div class="footer-cta border-b border-white/10">
       <div class="mx-auto flex max-w-7xl flex-col gap-8 px-6 py-12 sm:px-8 sm:py-14 lg:flex-row lg:items-center lg:justify-between lg:gap-12">
         <div>
           <p class="text-xs font-bold uppercase tracking-[0.2em] text-khaki-300">How can we help?</p>
           <h2 class="mt-3 max-w-2xl font-serif text-2xl leading-snug text-white sm:text-3xl">Clear advice starts with a conversation.</h2>
         </div>
         <div class="flex shrink-0 flex-col gap-4 sm:flex-row">
-          <a class="inline-flex min-h-12 items-center justify-center rounded-lg bg-khaki-400 px-6 py-3.5 text-sm font-bold text-maroon-950 transition hover:bg-khaki-300" href="{% url 'core:contact' %}">Request a consultation</a>
+          <a class="button-khaki" href="{% url 'core:contact' %}">Request a consultation {% include "components/icon.html" with name="arrow" %}</a>
           {% if site_information.primary_phone %}<a class="inline-flex min-h-12 items-center justify-center rounded-lg border border-khaki-300/60 px-6 py-3.5 text-sm font-bold text-white transition hover:bg-white/10" href="tel:{{ site_information.primary_phone }}">Call {{ site_information.primary_phone }}</a>{% endif %}
         </div>
       </div>
     </div>
     {% endblock %}
 
-    <div class="mx-auto grid max-w-7xl gap-10 px-6 py-14 sm:px-8 md:grid-cols-2 lg:grid-cols-[1.35fr_1fr_1fr_1.15fr] lg:gap-12">
+    <div class="mx-auto grid max-w-7xl gap-10 px-6 py-14 sm:px-8 md:grid-cols-2 lg:grid-cols-[1.2fr_.8fr_.9fr_1.4fr] lg:gap-8">
       <div>
         <a class="inline-block rounded-sm" href="{% url 'core:home' %}">
           <span class="font-serif text-2xl text-white">{{ site_information.firm_name|default:'Khoboko Law Chambers' }}</span>
         </a>
         <p class="mt-4 max-w-sm text-sm leading-7 text-khaki-200">{{ site_information.tagline|default:'Clear, trusted legal counsel.' }}</p>
         <div class="mt-6 flex flex-wrap gap-3">
-          {% if site_information.facebook_url %}<a class="flex h-10 w-10 items-center justify-center rounded-full border border-white/15 text-xs font-bold transition hover:border-khaki-300 hover:bg-white/10" href="{{ site_information.facebook_url }}" target="_blank" rel="noopener noreferrer" aria-label="Facebook">f</a>{% endif %}
-          {% if site_information.linkedin_url %}<a class="flex h-10 w-10 items-center justify-center rounded-full border border-white/15 text-xs font-bold transition hover:border-khaki-300 hover:bg-white/10" href="{{ site_information.linkedin_url }}" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn">in</a>{% endif %}
-          {% if site_information.instagram_url %}<a class="flex h-10 w-10 items-center justify-center rounded-full border border-white/15 text-xs font-bold transition hover:border-khaki-300 hover:bg-white/10" href="{{ site_information.instagram_url }}" target="_blank" rel="noopener noreferrer" aria-label="Instagram">ig</a>{% endif %}
+          {% if site_information.facebook_url %}<a class="flex h-10 w-10 items-center justify-center rounded-full border border-white/15 text-xs font-bold transition hover:border-khaki-300 hover:bg-white/10" href="{{ site_information.facebook_url }}" target="_blank" rel="noopener noreferrer" aria-label="Facebook">{% include 'components/icon.html' with name='facebook' %}</a>{% endif %}
+          {% if site_information.linkedin_url %}<a class="flex h-10 w-10 items-center justify-center rounded-full border border-white/15 text-xs font-bold transition hover:border-khaki-300 hover:bg-white/10" href="{{ site_information.linkedin_url }}" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn">{% include 'components/icon.html' with name='linkedin' %}</a>{% endif %}
+          {% if site_information.instagram_url %}<a class="flex h-10 w-10 items-center justify-center rounded-full border border-white/15 text-xs font-bold transition hover:border-khaki-300 hover:bg-white/10" href="{{ site_information.instagram_url }}" target="_blank" rel="noopener noreferrer" aria-label="Instagram">{% include 'components/icon.html' with name='instagram' %}</a>{% endif %}
         </div>
       </div>
 
@@ -127,15 +127,15 @@
         </ul>
       </nav>
 
-      <div>
-        <h2 class="text-xs font-bold uppercase tracking-[0.18em] text-khaki-300">Contact</h2>
-        <address class="mt-5 space-y-3 text-sm not-italic leading-6 text-khaki-100">
-          {% if site_information.physical_address %}<p class="whitespace-pre-line">{{ site_information.physical_address }}</p>{% endif %}
-          {% if site_information.primary_phone %}<p><a class="transition hover:text-white" href="tel:{{ site_information.primary_phone }}">{{ site_information.primary_phone }}</a></p>{% endif %}
-          {% if site_information.secondary_phone %}<p><a class="transition hover:text-white" href="tel:{{ site_information.secondary_phone }}">{{ site_information.secondary_phone }}</a></p>{% endif %}
-          {% if site_information.primary_email %}<p><a class="break-all transition hover:text-white" href="mailto:{{ site_information.primary_email }}">{{ site_information.primary_email }}</a></p>{% endif %}
-          {% if site_information.business_hours %}<p class="text-khaki-300">{{ site_information.business_hours }}</p>{% endif %}
-          {% if site_information.google_maps_url %}<p><a class="font-bold text-khaki-300 transition hover:text-white" href="{{ site_information.google_maps_url }}" target="_blank" rel="noopener noreferrer">Get directions →</a></p>{% endif %}
+      <div class="footer-contact-panel">
+        <h2 class="text-xs font-bold uppercase tracking-[0.18em] text-khaki-300">Connect with us</h2>
+        <address class="mt-6 space-y-5 text-sm not-italic leading-6 text-khaki-100">
+          {% if site_information.physical_address %}<div class="footer-contact-row">{% include 'components/icon.html' with name='pin' %}<div><span class="footer-contact-label">Visit our chambers</span><p class="whitespace-pre-line">{{ site_information.physical_address }}</p></div></div>{% endif %}
+          {% if site_information.postal_address %}<div class="footer-contact-row">{% include 'components/icon.html' with name='mail' %}<div><span class="footer-contact-label">Postal address</span><p>{{ site_information.postal_address }}</p></div></div>{% endif %}
+          {% if site_information.primary_phone or site_information.secondary_phone %}<div class="footer-contact-row">{% include 'components/icon.html' with name='phone' %}<div><span class="footer-contact-label">Call us</span>{% if site_information.primary_phone %}<a class="block transition hover:text-white" href="tel:{{ site_information.primary_phone }}">{{ site_information.primary_phone }}</a>{% endif %}{% if site_information.secondary_phone %}<a class="block transition hover:text-white" href="tel:{{ site_information.secondary_phone }}">{{ site_information.secondary_phone }}</a>{% endif %}</div></div>{% endif %}
+          {% if site_information.primary_email %}<div class="footer-contact-row">{% include 'components/icon.html' with name='mail' %}<div class="min-w-0"><span class="footer-contact-label">Email us</span><a class="break-words transition hover:text-white" href="mailto:{{ site_information.primary_email }}">{{ site_information.primary_email }}</a></div></div>{% endif %}
+          {% if site_information.business_hours %}<div class="footer-contact-row">{% include 'components/icon.html' with name='clock' %}<div><span class="footer-contact-label">Office hours</span><p>{{ site_information.business_hours }}</p></div></div>{% endif %}
+          {% if site_information.google_maps_url %}<a class="inline-flex items-center gap-2 font-semibold text-khaki-200 transition hover:text-white" href="{{ site_information.google_maps_url }}" target="_blank" rel="noopener noreferrer">Get directions {% include 'components/icon.html' with name='external' %}</a>{% endif %}
         </address>
       </div>
     </div>
@@ -156,5 +156,6 @@
       </div>
     </div>
   </footer>
+  <script src="{% static 'js/site.js' %}" defer></script>
 </body>
 </html>
