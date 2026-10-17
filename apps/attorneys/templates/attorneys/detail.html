@@ -1,9 +1,5 @@
 {% extends 'base.html' %}
 {% load static %}
-{% block title %}{{ attorney }} | {{ site_information.firm_name|default:'Khoboko Law Chambers' }}{% endblock %}
-{% block meta_description %}{{ attorney }}, {{ attorney.title }} at {{ site_information.firm_name|default:'Khoboko Law Chambers' }}. {{ attorney.biography|striptags|truncatewords:18 }}{% endblock %}
-{% block og_title %}{{ attorney }} | {{ site_information.firm_name|default:'Khoboko Law Chambers' }}{% endblock %}
-{% block og_description %}{{ attorney.title }} — {{ attorney.biography|striptags|truncatewords:18 }}{% endblock %}
 {% block content %}
 <article>
   <header class="page-intro border-b border-khaki-200">

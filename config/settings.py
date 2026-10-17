@@ -78,6 +78,7 @@ INSTALLED_APPS = [
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'whitenoise.middleware.WhiteNoiseMiddleware',
+    'apps.core.middleware.SearchIndexingMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -88,6 +89,12 @@ MIDDLEWARE = [
 ]
 
 ROOT_URLCONF = 'config.urls'
+
+# Prefer this deployment override to the editable site URL when configured.
+SITE_URL = config('SITE_URL', default='').rstrip('/')
+SECURITY_CONTACT = config('SECURITY_CONTACT', default='')
+# Review the reporting contact and renew this fixed expiry before it passes.
+SECURITY_EXPIRES = config('SECURITY_EXPIRES', default='2027-04-01T00:00:00Z')
 
 TEMPLATES = [
     {

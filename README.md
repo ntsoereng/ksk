@@ -106,6 +106,16 @@ A dismissible legal-information banner appears on a visitor’s first visit. Dis
 
 Uploaded files are stored in the project `media/` directory by default. Set `MEDIA_ROOT` to persistent storage in production. `DJANGO_SERVE_MEDIA=true` lets Django deliver uploads when the hosting platform does not map `/media/`; high-traffic deployments should set it to false after configuring Nginx, Apache, or object storage to serve that directory.
 
+## Search engines and social previews
+
+Every public page has a unique title and description, a canonical URL without tracking parameters, Open Graph and Twitter card metadata, and JSON-LD for the firm, website and page. Detail pages add article, person, service or case-study data and breadcrumbs. Preview images use the content image when available, then the configured social image or logo, then the bundled 1200 × 630 branded card. Update the bundled card if the firm's branding changes.
+
+Set **Public website URL** in staff Site settings to the production HTTPS origin, or set `SITE_URL` in the deployment environment to override it. The canonical URLs, image URLs, `/sitemap.xml` and `/robots.txt` use this same origin. Configure the social image and homepage SEO title/description in Site settings. The sitemap includes public legal pages and only active profiles/services and published, non-future content. Staff and admin routes are disallowed in robots.txt and receive `X-Robots-Tag: noindex, nofollow`; failed responses also receive that header. Authentication still controls access to private content. Crawling restrictions are [distinct from search indexing controls](https://developers.google.com/search/docs/crawling-indexing/robots/intro).
+
+`/.well-known/security.txt` publishes the reporting contact, canonical location, preferred language and a fixed expiry following [RFC 9116](https://www.rfc-editor.org/rfc/rfc9116.html). `/security.txt` permanently redirects there. Set `SECURITY_CONTACT` to a monitored `mailto:` or HTTPS reporting URI; otherwise the firm's configured email is used, falling back to the contact form. Review the reporting contact and renew `SECURITY_EXPIRES` before **1 April 2027**, the default expiry. Serve this endpoint over HTTPS in production. This publishes a reporting channel and does not establish a testing policy or bug bounty.
+
+After deploying, submit `/sitemap.xml` in your search engine webmaster tools and validate representative URLs in the social platforms' preview tools. Run `collectstatic` to publish the bundled sharing image.
+
 ## Frontend commands
 
 ```bash

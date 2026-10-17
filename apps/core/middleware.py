@@ -6,6 +6,15 @@ from django.utils.deprecation import MiddlewareMixin
 from .rate_limits import client_address, consume_limit
 
 
+class SearchIndexingMiddleware(MiddlewareMixin):
+    """Keep private routes and failed requests out of search results."""
+
+    def process_response(self, request, response):
+        if request.path.startswith(('/staff/', '/admin/')) or response.status_code >= 400:
+            response['X-Robots-Tag'] = 'noindex, nofollow'
+        return response
+
+
 class FormProtectionMiddleware(MiddlewareMixin):
     """Limit writes before invoking authentication or content handlers."""
 

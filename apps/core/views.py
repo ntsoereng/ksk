@@ -1,4 +1,5 @@
 from django.contrib import messages
+from django.conf import settings
 from django.contrib.admin.views.decorators import staff_member_required
 from django.contrib.auth import logout
 from django.contrib.auth.views import LoginView
@@ -24,6 +25,7 @@ from apps.practice_areas.models import PracticeArea
 from apps.articles.models import Article
 from .forms import InquiryForm
 from .models import CaseStudy, Inquiry, SiteInformation
+from .seo import absolute_url, public_origin
 from .staff_forms import (
     ArticleStaffForm,
     AttorneyStaffForm,
@@ -352,9 +354,28 @@ def staff_message_detail(request, pk):
 
 
 def robots_txt(request):
-    sitemap_url = request.build_absolute_uri(reverse('sitemap'))
-    content = f'User-agent: *\nAllow: /\nDisallow: /admin/\n\nSitemap: {sitemap_url}\n'
+    origin = public_origin(request, SiteInformation.get_solo())
+    sitemap_url = absolute_url(origin, reverse('sitemap'))
+    content = f'User-agent: *\nAllow: /\nDisallow: /admin/\nDisallow: /staff/\n\nSitemap: {sitemap_url}\n'
     return HttpResponse(content, content_type='text/plain')
+
+
+def security_txt(request):
+    information = SiteInformation.get_solo()
+    origin = public_origin(request, information)
+    contact = settings.SECURITY_CONTACT
+    if not contact:
+        email = getattr(information, 'primary_email', '')
+        contact = f'mailto:{email}' if email else absolute_url(origin, reverse('core:contact'))
+    content = (
+        f'Contact: {contact}\n'
+        f'Expires: {settings.SECURITY_EXPIRES}\n'
+        'Preferred-Languages: en\n'
+        f'Canonical: {absolute_url(origin, reverse("security"))}\n'
+    )
+    response = HttpResponse(content, content_type='text/plain; charset=utf-8')
+    response['Cache-Control'] = 'public, max-age=3600, must-revalidate'
+    return response
 
 
 def favicon(request):

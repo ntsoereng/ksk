@@ -1,9 +1,5 @@
 {% extends 'base.html' %}
 {% load static %}
-{% block title %}{{ case_study.title }} | {{ site_information.firm_name|default:'Khoboko Law Chambers' }}{% endblock %}
-{% block meta_description %}{{ case_study.summary }}{% endblock %}
-{% block og_title %}{{ case_study.title }} | {{ site_information.firm_name|default:'Khoboko Law Chambers' }}{% endblock %}
-{% block og_description %}{{ case_study.summary }}{% endblock %}
 {% block content %}
 <article>
   <header class="page-intro border-b border-khaki-200">

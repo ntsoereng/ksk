@@ -1,7 +1,4 @@
 {% extends 'base.html' %}
-{% block title %}Contact | {{ site_information.firm_name|default:'Khoboko Law Chambers' }}{% endblock %}
-{% block meta_description %}Contact {{ site_information.firm_name|default:'Khoboko Law Chambers' }} to discuss how our legal team may assist you.{% endblock %}
-{% block og_title %}Contact | {{ site_information.firm_name|default:'Khoboko Law Chambers' }}{% endblock %}
 {% block content %}
 <section class="page-intro border-b border-khaki-200 py-16 sm:py-20"><div class="mx-auto max-w-7xl px-6 sm:px-8"><p class="eyebrow">Contact our chambers</p><h1 class="page-title">{{ site_information.contact_title|default:'Start a conversation.' }}</h1><p class="mt-5 max-w-2xl text-lg leading-8 text-slate-700">{{ site_information.contact_intro|default:'Tell us briefly how we can help. Our team will respond with the appropriate next step.' }}</p><div class="mt-7 inline-flex items-center gap-2 text-sm text-maroon-800">{% include 'components/icon.html' with name='message' %} A conversation is the first step toward clarity.</div></div></section>
 <section class="contact-layout mx-auto grid max-w-7xl gap-10 px-6 py-14 sm:px-8 sm:py-20 lg:grid-cols-[minmax(0,1fr)_minmax(0,1.45fr)]">

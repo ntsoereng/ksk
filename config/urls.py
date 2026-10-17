@@ -19,8 +19,9 @@ from django.conf import settings
 from django.conf.urls.static import static
 from django.contrib.sitemaps.views import sitemap
 from django.urls import include, path, re_path
+from django.views.generic import RedirectView
 from apps.core.sitemaps import sitemaps
-from apps.core.views import favicon, media_file, robots_txt
+from apps.core.views import favicon, media_file, robots_txt, security_txt
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -30,6 +31,8 @@ urlpatterns = [
     path('articles/', include('apps.articles.urls')),
     path('sitemap.xml', sitemap, {'sitemaps': sitemaps}, name='sitemap'),
     path('robots.txt', robots_txt, name='robots'),
+    path('.well-known/security.txt', security_txt, name='security'),
+    path('security.txt', RedirectView.as_view(pattern_name='security', permanent=True)),
     path('favicon.ico', favicon, name='favicon'),
 ]
 
