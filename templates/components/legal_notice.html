@@ -1,0 +1,9 @@
+<aside class="legal-notice" data-legal-notice data-notice-version="1" role="region" aria-labelledby="legal-notice-heading" hidden>
+  <span class="legal-notice-icon">{% include 'components/icon.html' with name='scales' %}</span>
+  <div class="legal-notice-copy">
+    <h2 id="legal-notice-heading">General information, not legal advice.</h2>
+    <p>The information on this website should not be relied on as legal authority or as a substitute for advice tailored to your circumstances. Using this site or sending an enquiry does not create a lawyer-client relationship.</p>
+    <nav aria-label="Website policies"><a href="{% url 'core:terms' %}">Read our terms of use {% include 'components/icon.html' with name='arrow' %}</a><a href="{% url 'core:privacy' %}">Privacy policy</a></nav>
+  </div>
+  <button class="legal-notice-dismiss" type="button" data-dismiss-legal-notice aria-label="Dismiss legal information notice">Dismiss <span aria-hidden="true">×</span></button>
+</aside>

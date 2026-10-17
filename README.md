@@ -102,6 +102,8 @@ The contact form also has a non-interactive spam-trap field, a 5,000-character m
 
 The default privacy and terms pages now cover initial enquiries, accepting instructions, confidentiality, website use, retention, essential cookies, security counters, external maps and images, privacy requests, and applicable law. Privacy wording was informed by the [Lesotho Data Protection Act published in the Government Gazette](https://www.nic.ls/lsnic/community/policies/Data_Protection_Act_2011_Lesotho.pdf). Dashboard overrides still take precedence: review any existing **Privacy policy** or **Terms of use** values in Site settings if older copy is still displayed. Keep the published policy, revision date, service-provider arrangements and retention practices aligned with the firm’s actual operations.
 
+A dismissible legal-information banner appears on a visitor’s first visit. Dismissal stores only the notice version in browser local storage (`klc-legal-notice-dismissed`). Update `data-notice-version` in `templates/components/legal_notice.html` when a material notice change should be shown again. If storage is blocked, dismissal still works for the current page. The permanent footer notice and policy links remain available.
+
 Uploaded files are stored in the project `media/` directory by default. Set `MEDIA_ROOT` to persistent storage in production. `DJANGO_SERVE_MEDIA=true` lets Django deliver uploads when the hosting platform does not map `/media/`; high-traffic deployments should set it to false after configuring Nginx, Apache, or object storage to serve that directory.
 
 ## Frontend commands
